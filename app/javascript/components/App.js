@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import TeamBuilder from './TeamBuilder'
+import Home from './Home'
 
 class App extends React.Component {
 	render () {
@@ -9,10 +10,10 @@ class App extends React.Component {
 			<BrowserRouter>
 				<Switch>
 					{/*
-						<Route exact path="/" render={() => ("Home!")} />
 						<Route path="/hello" render={() => } />
 					*/}
-					<Route exact path="/" render={() => <TeamBuilder greeting="Friend" />} />
+					<Route exact path="/" render={() => <Home />} />
+					<Route path="/team" render={() => <TeamBuilder greeting="Friend" />} />
 				</Switch>
 			</BrowserRouter>
 		);

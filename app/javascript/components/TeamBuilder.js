@@ -3,9 +3,6 @@ import PropTypes from "prop-types"
 
 class TeamBuilder extends React.Component {
 	render () {
-		console.log('*');
-		console.log('hit!');
-		console.log('*');
 		return (
 			<React.Fragment>
 				Greeting: {this.props.greeting}
