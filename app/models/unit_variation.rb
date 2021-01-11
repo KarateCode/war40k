@@ -1,0 +1,2 @@
+class UnitVariation < ApplicationRecord
+end

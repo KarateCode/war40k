@@ -13,3 +13,24 @@
  *= require_tree .
  *= require_self
  */
+
+.power {
+	margin-left: 20px;
+}
+
+.unit {
+	width: 48%;
+	display: inline-block;
+}
+.unit:first-of-type {
+	text-align: right;
+}
+
+header {
+	margin-top: 30px;
+}
+
+.team {
+	width: 48%;
+	display: inline-block;
+}

@@ -4,4 +4,7 @@ Rails.application.routes.draw do
 	end
 
 	root 'static#index'
+	namespace :api, defaults: {format: 'json'} do
+		get '/units', to: 'units#index'
+	end
 end

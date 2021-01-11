@@ -10,7 +10,7 @@ class App extends React.Component {
 			<BrowserRouter>
 				<Switch>
 					{/*
-						<Route path="/hello" render={() => } />
+						<Route path="/hello" render={() => "Home"} />
 					*/}
 					<Route exact path="/" render={() => <Home />} />
 					<Route path="/team" render={() => <TeamBuilder greeting="Friend" />} />
