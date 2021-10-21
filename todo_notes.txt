@@ -1,0 +1,45 @@
+Unit
+====
+name
+power (base power)
+(points)
+
+
+unit_variations
+===============
+unit_id
+label
+value
+extra_power
+(extra_points)
+
+- could always default to the last (highest) variation, since that's the most likely way for us to play
+- is there a way to use React without the gulp step?
+- is nginx nazi'ing my requests and doing something?
+
+TODO:
+    variations
+        -- load from db
+            -- try overriding to_json
+        -- make it to FE
+        display on FE
+        make radios not toggle checkbox
+        total properly!
+            Need to grand total properly...
+    eslint
+
+Notes for next time:
+    bundle exec rails webpacker:install # answer n to every question
+    mysql -uroot war40k_development < war40kdump
+    brew services start mysql
+    ./bin/webpack-dev-server
+
+# make sure to use node 10.17
+# don't use --api; it kills all erb!
+# https://guides.rubyonrails.org/getting_started.html
+# https://www.freecodecamp.org/news/how-to-create-a-rails-project-with-a-react-and-redux-front-end-8b01e17a1db/
+npm install --save react-router-dom
+    npm install
+    rails g react:install
+    # Can't resolve 'react_ujs' in
+    yarn add react_ujs
