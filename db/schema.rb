@@ -10,21 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_01_09_033310) do
+ActiveRecord::Schema.define(version: 2021_10_20_130619) do
 
-  create_table "unit_variations", charset: "utf8mb4", force: :cascade do |t|
+  create_table "unit_variations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "unit_id"
     t.string "name"
     t.integer "extra_power"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "extra_points"
   end
 
-  create_table "units", charset: "utf8mb4", force: :cascade do |t|
+  create_table "units", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "power"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "picture"
+    t.string "color"
+    t.integer "points"
+    t.text "desc"
   end
 
 end
