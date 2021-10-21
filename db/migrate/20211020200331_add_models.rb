@@ -7,8 +7,12 @@ class AddModels < ActiveRecord::Migration[6.1]
 			t.timestamps
 		end
 
-		add_column :unit_variations, :number_of_models, :integer
-		add_column :unit_variations, :model_types?, :string
-		add_column :unit_variations, :upTo, :boolean
+		create_table :variation_slots do |t|
+			t.string :model_type
+			t.integer :number_of_models
+			t.integer :unit_variation_id
+			t.boolean :upTo
+			t.timestamps
+		end
 	end
 end

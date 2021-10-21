@@ -4,6 +4,7 @@ class CreateUnitVariations < ActiveRecord::Migration[6.1]
 			t.integer :unit_id
 			t.string :name
 			t.integer :extra_power
+			t.integer :extra_points
 			t.timestamps
 		end
 	end
