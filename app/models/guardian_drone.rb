@@ -1,0 +1,2 @@
+class GuardianDrone < Model
+end

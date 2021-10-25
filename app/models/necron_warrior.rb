@@ -1,0 +1,2 @@
+class NecronWarrior < Model
+end

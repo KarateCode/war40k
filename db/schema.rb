@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_20_130619) do
+ActiveRecord::Schema.define(version: 2021_10_21_135921) do
+
+  create_table "models", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "type"
+    t.string "name"
+    t.integer "points"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "unit_variations", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "unit_id"
@@ -30,6 +38,15 @@ ActiveRecord::Schema.define(version: 2021_10_20_130619) do
     t.string "color"
     t.integer "points"
     t.text "desc"
+  end
+
+  create_table "variation_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "model_type"
+    t.integer "number_of_models"
+    t.boolean "upTo"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "unit_variation_id"
   end
 
 end

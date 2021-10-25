@@ -16,7 +16,7 @@
 
 body {
 	/*background-color: black;*/
-	color: green;
+	/*color: green;*/
 	font-family: 'Orbitron', sans-serif;
 	margin: 0;
 }
@@ -100,4 +100,117 @@ hr {
 }
 .variation input {
 	margin-left: 48%;
+}
+
+.awt-modal-react {
+	color: red;
+
+
+/*    &.ani-enter .modal-backdrop {
+        opacity: 0.01;
+    }
+
+    &.ani-enter .modal-dialog {
+        transform: translate(0, -25%);
+    }
+
+    &.ani-enter.ani-enter-active .modal-backdrop {
+        #awt > .default-transition(opacity);
+
+        opacity: 0.5;
+    }
+
+    &.ani-enter.ani-enter-active .modal-dialog {
+        #awt > .default-transition("transform, opacity");
+
+        opacity: 1;
+        transform: translate(0, 0);
+    }
+
+    &.ani-leave .modal-backdrop {
+        opacity: 0.5;
+    }
+
+    &.ani-leave .modal-dialog {
+        transform: translate(0, 0);
+    }
+
+    &.ani-leave.ani-leave-active .modal-backdrop {
+        #awt > .default-transition(opacity);
+
+        opacity: 0.01;
+    }
+
+    &.ani-leave.ani-leave-active .modal-dialog {
+        #awt > .default-transition("transform, opacity");
+
+        opacity: 0.01;
+        transform: translate(0, -25%);
+    }
+
+    .modal-content__close-ex:hover {
+        text-decoration: none;
+    }
+
+    .modal-content__header-text {
+        max-height: 68px;
+        overflow: hidden;
+    }
+*/
+}
+
+.slot {
+	margin-left: 30px;
+}
+
+.awt-modal-react .modal-backdrop {
+    background-color: #000;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.modal {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    display: block;
+    z-index: 1000;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.modal-content__header {
+	font-size: 24px;
+	color: green;
+	background-color: black;
+	padding: 15px;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+	text-align: center;
+}
+
+.modal-content__body {
+	padding-top: 30px;
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.modal-dialog {
+	box-shadow: 3px 3px 5px 6px teal;
+	position: relative;
+	width: 600px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 50px;
+	margin-bottom: 50px;
+	padding-top: 0;
+	padding-bottom: 30px;
+	border-radius: 10px;
 }

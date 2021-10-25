@@ -6,5 +6,7 @@ Rails.application.routes.draw do
 	root 'static#index'
 	namespace :api, defaults: {format: 'json'} do
 		get '/units', to: 'units#index'
+		get '/units/:id/variations', to: 'units#variations'
+		get '/units/:id/variation-models', to: 'units#variation_models'
 	end
 end
