@@ -100,7 +100,8 @@ class TeamBuilder extends React.Component {
 			const response = await axios.get(`/api/units/${unit.id}/variation-models.json`)
 			const models = response.data;
 			const modelsByType = _.groupBy(models, 'type')
-			this.setState({modelsByType})
+			const modelsById = _.keyBy(models, 'id')
+			this.setState({modelsByType, modelsById})
 		}
 	}
 
@@ -127,16 +128,27 @@ class TeamBuilder extends React.Component {
 	}
 
 	getSlotOptions(variation, slot) {
-		const chosenModels = _.values(this.state.unitsCheckedA[variation.unit_id].slots)
+		const chosenModels = _(this.state.unitsCheckedA[variation.unit_id].slots)
+			.values()
+			.map((slot) => _.values(slot))
+			.flatten()
+			.compact()
+			.value()
 		const {modelsByType} = this.state
 		const allModels = _.get(modelsByType, [slot.model_type], [])
 		const availableModels = allModels.filter((model) => !_.includes(chosenModels, model.id))
-		return availableModels
+		return [{id: undefined, name: '- None -'}, ...availableModels]
 	}
 
-	getSlotPoints(variation, index) {
+	getSlotPoints(variation, slot, index) {
 		// console.log(this.state.unitsCheckedA[variation.unit_id].slots[index])
-		return 'success!'
+		const {modelsByType, unitsCheckedA} = this.state
+		const modelId = _.get(unitsCheckedA, [variation.unit_id, 'slots', slot.id, index]);
+		const modelType = slot.model_type
+		const model = _.find(modelsByType[modelType], {id: modelId});
+		return (model)
+			? model.points
+			: null;
 	}
 
 	getModelChoice(variation, slot, index) {
@@ -147,9 +159,28 @@ class TeamBuilder extends React.Component {
 		return model
 	}
 
+	handleRemoveModel(variation, slot, index) {
+		return (model) => {
+			const unitsCheckedA = Object.assign(
+				{},
+				this.state.unitsCheckedA,
+				{
+					[variation.unit_id]: Object.assign({}, this.state.unitsCheckedA[variation.unit_id], {
+						variationChosen: variation.id,
+						slots: Object.assign({}, this.state.unitsCheckedA[variation.unit_id].slots, {
+							[slot.id]: Object.assign({}, this.state.unitsCheckedA[variation.unit_id].slots[slot.id], {[index]: undefined}),
+						}),
+					}),
+				}
+			)
+			this.setState({unitsCheckedA})
+		}
+	}
+
 	render () {
 		const {
 			// modelsByType,
+			modelsById,
 			selectedUnitId,
 			showVariationModal,
 			unitsCheckedA,
@@ -159,17 +190,31 @@ class TeamBuilder extends React.Component {
 		} = this.state
 
 		const unit = _.get(unitsById, [selectedUnitId])
-		// console.log('unitsCheckedA:');
-		// console.log(require('util').inspect(unitsCheckedA, false, null));
-		const totalA = _(unitsCheckedA)
+		console.log('unitsCheckedA:');
+		console.log(require('util').inspect(unitsCheckedA, false, null));
+		const unitPointsA = _(unitsCheckedA)
 			.toPairs()
 			.filter((pair) => pair[1].included)
-			.map((pair) => unitsById[pair[0]].power)
+			.map((pair) => unitsById[pair[0]].points)
 			.sum()
+		const variationPointsA = _(unitsCheckedA)
+			.toPairs()
+			.filter((pair) => pair[1].included)
+			.map((pair) => _.values(pair[1].slots))
+			.compact()
+			.flatten()
+			.map((slotEntry) => _.values(slotEntry))
+			.flatten()
+			.map((modelId) => _.get(modelsById, [modelId, 'points'], 0))
+			// .value()
+			.sum()
+		console.log('variationPointsA:');
+		console.log(require('util').inspect(variationPointsA, false, null));
+		const totalA = unitPointsA + variationPointsA;
 		const totalB = _(unitsCheckedB)
 			.toPairs()
 			.filter((pair) => pair[1])
-			.map((pair) => unitsById[pair[0]].power)
+			.map((pair) => unitsById[pair[0]].points)
 			.sum()
 
 		return (
@@ -191,7 +236,7 @@ class TeamBuilder extends React.Component {
 								<div className='unit-label'>
 									<div>{unit.name.toUpperCase()}</div>
 								</div>
-								<span className='power'>{this.calcPowerA(unit)}</span>
+								<span className='power'>{unit.points}</span>
 							</a>
 							<input
 								type='checkbox'
@@ -212,7 +257,7 @@ class TeamBuilder extends React.Component {
 								onClick={this.handleToggleB.bind(this)(unit)}
 								className='clickable-area'>
 
-								<span className='power'>{unit.power}</span>
+								<span className='power'>{unit.points}</span>
 								<div className='unit-label'>{unit.name.toUpperCase()}</div>
 								{unit.picture && (
 									<img src={`assets/${unit.picture}`} className='unit-image' />
@@ -250,7 +295,14 @@ class TeamBuilder extends React.Component {
 													valueKey='id'
 													labelKey='name'
 													value={this.getModelChoice(variation, slot, index)} />
-												{this.getSlotPoints(variation, index)}
+												<span className='slot-points'>{this.getSlotPoints(variation, slot, index)}</span>
+												{this.getSlotPoints(variation, slot, index) && (
+													<a
+														onClick={this.handleRemoveModel(variation, slot, index)}
+														className='remove-slot-model'>
+														X
+													</a>
+												)}
 											</div>
 										))}
 									</div>

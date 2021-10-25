@@ -112,8 +112,8 @@ class Modal extends React.Component {
 		let headerEl;
 		if (headerText || hasCloseEx) {
 			headerEl = (
-				<div className="modal-content__header">
-					<div className="modal-content__header-text">{headerText}</div>
+				<div className='modal-content__header'>
+					<div className='modal-content__header-text'>{headerText}</div>
 					{hasCloseEx ? closeEl : ''}
 				</div>
 			);
