@@ -1,11 +1,11 @@
 import React from 'react'
-import PropTypes from 'prop-types'
-import Select from 'react-select'
 
 const _ = require('lodash');
 const axios = require('axios');
 
 const Modal = require('components/Modal');
+const Selectimus = require('components/Selectimus');
+
 class TeamBuilder extends React.Component {
 	constructor(props) {
 		super(props)
@@ -40,7 +40,7 @@ class TeamBuilder extends React.Component {
 					[unit.id]: Object.assign({}, this.state.unitsCheckedA[unit.id], {
 						included: !_.get(this, ['state', 'unitsCheckedA', unit.id, 'included']),
 					}),
-				},
+				}
 			)
 			this.setState({unitsCheckedA})
 
@@ -77,7 +77,7 @@ class TeamBuilder extends React.Component {
 						variationChosen: variation.id,
 						slots: [], // wipe slots in case they chose some from a different variation
 					}),
-				},
+				}
 			)
 			this.setState({unitsCheckedA})
 		}
@@ -109,7 +109,7 @@ class TeamBuilder extends React.Component {
 	}
 
 	handleSlotChange(variation, slot, index) {
-		return (event) => {
+		return (model) => {
 			const unitsCheckedA = Object.assign(
 				{},
 				this.state.unitsCheckedA,
@@ -117,10 +117,10 @@ class TeamBuilder extends React.Component {
 					[variation.unit_id]: Object.assign({}, this.state.unitsCheckedA[variation.unit_id], {
 						variationChosen: variation.id,
 						slots: Object.assign({}, this.state.unitsCheckedA[variation.unit_id].slots, {
-							[slot.id]: {[index]: event.value.id},
+							[slot.id]: Object.assign({}, this.state.unitsCheckedA[variation.unit_id].slots[slot.id], {[index]: model.id}),
 						}),
 					}),
-				},
+				}
 			)
 			this.setState({unitsCheckedA})
 		}
@@ -131,49 +131,36 @@ class TeamBuilder extends React.Component {
 		const {modelsByType} = this.state
 		const allModels = _.get(modelsByType, [slot.model_type], [])
 		const availableModels = allModels.filter((model) => !_.includes(chosenModels, model.id))
-		return availableModels.map((model) => {
-			return {value: model, label: model.name}
-		});
+		return availableModels
 	}
 
 	getSlotPoints(variation, index) {
-		console.log(this.state.unitsCheckedA[variation.unit_id].slots[index])
+		// console.log(this.state.unitsCheckedA[variation.unit_id].slots[index])
 		return 'success!'
 	}
 
 	getModelChoice(variation, slot, index) {
 		const {modelsByType, unitsCheckedA} = this.state
-		console.log('variation:');
-		console.log(require('util').inspect(variation, false, null));
-		console.log('slot:');
-		console.log(require('util').inspect(slot, false, null));
-		console.log('index:');
-		console.log(require('util').inspect(index, false, null));
-		console.log("_.get(unitsCheckedA, [variation.unit_id, 'slots', slot.id, index])");
-		console.log(_.get(unitsCheckedA, [variation.unit_id, 'slots', slot.id, index]));
 		const modelId = _.get(unitsCheckedA, [variation.unit_id, 'slots', slot.id, index]);
 		const modelType = slot.model_type
 		const model = _.find(modelsByType[modelType], {id: modelId});
-		console.log('model:');
-		console.log(require('util').inspect(model, false, null));
-		// _.find on models once we have narrowed down to type...?
 		return model
 	}
 
 	render () {
 		const {
-			modelsByType,
+			// modelsByType,
 			selectedUnitId,
 			showVariationModal,
 			unitsCheckedA,
 			unitsCheckedB,
 			unitsById,
-			variationsA,
+			// variationsA,
 		} = this.state
 
 		const unit = _.get(unitsById, [selectedUnitId])
-		console.log('unitsCheckedA:');
-		console.log(require('util').inspect(unitsCheckedA, false, null));
+		// console.log('unitsCheckedA:');
+		// console.log(require('util').inspect(unitsCheckedA, false, null));
 		const totalA = _(unitsCheckedA)
 			.toPairs()
 			.filter((pair) => pair[1].included)
@@ -210,7 +197,7 @@ class TeamBuilder extends React.Component {
 								type='checkbox'
 								value={unit.id}
 								className='included'
-								onChange={this.handleOnClickA.bind(this)}
+								onChange={this.handleToggleA(unit)}
 								checked={_.get(unitsCheckedA, [unit.id, 'included']) || false} />
 						</span>
 
@@ -219,7 +206,7 @@ class TeamBuilder extends React.Component {
 								type='checkbox'
 								value={unit.id}
 								className='included'
-								onChange={this.handleOnClickB.bind(this)}
+								onChange={this.handleToggleB(unit)}
 								checked={unitsCheckedB[unit.id] || false} />
 							<a
 								onClick={this.handleToggleB.bind(this)(unit)}
@@ -257,9 +244,11 @@ class TeamBuilder extends React.Component {
 										{slot.model_type}
 										{_.range(slot.number_of_models).map((index) => (
 											<div key={`slot-${slot.id}-${index}`}>
-												<Select
+												<Selectimus
 													options={this.getSlotOptions(variation, slot)}
 													onChange={this.handleSlotChange(variation, slot, index)}
+													valueKey='id'
+													labelKey='name'
 													value={this.getModelChoice(variation, slot, index)} />
 												{this.getSlotPoints(variation, index)}
 											</div>
@@ -274,10 +263,6 @@ class TeamBuilder extends React.Component {
 			</div>
 		);
 	}
-}
-
-TeamBuilder.propTypes = {
-	greeting: PropTypes.string
 }
 
 export default TeamBuilder

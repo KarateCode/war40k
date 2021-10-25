@@ -1,0 +1,12 @@
+node_modules/
+public/packs/js/
+app/javascript/packs/application.js
+app/javascript/packs/server_rendering.js
+babel.config.js
+config/webpack/development.js
+config/webpack/environment.js
+config/webpack/production.js
+config/webpack/test.js
+postcss.config.js
+app/javascript/channels/consumer.js
+app/javascript/channels/index.js

@@ -1,10 +1,17 @@
 import React from "react"
-import PropTypes from "prop-types"
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import TeamBuilder from './TeamBuilder'
 import Home from './Home'
 
 class App extends React.Component {
+	goHome() {
+		return <Home />
+	}
+
+	goTeamBuilder() {
+		return <TeamBuilder greeting='Friend' />
+	}
+
 	render () {
 		return (
 			<BrowserRouter>
@@ -12,8 +19,8 @@ class App extends React.Component {
 					{/*
 						<Route path="/hello" render={() => "Home"} />
 					*/}
-					<Route exact path="/" render={() => <Home />} />
-					<Route path="/team" render={() => <TeamBuilder greeting="Friend" />} />
+					<Route exact path='/' render={this.goHome} />
+					<Route path='/team' render={this.goTeamBuilder} />
 				</Switch>
 			</BrowserRouter>
 		);
