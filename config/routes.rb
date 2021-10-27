@@ -8,5 +8,12 @@ Rails.application.routes.draw do
 		get '/units', to: 'units#index'
 		get '/units/:id/variations', to: 'units#variations'
 		get '/units/:id/variation-models', to: 'units#variation_models'
+
+		get '/armies', to: 'armies#index'
+		get '/armies/:id/detachments', to: 'armies#detachments'
+		get '/armies/:id', to: 'armies#show'
+		get '/detachment_defs', to: 'detachment_defs#index'
+
+		post '/detachments', to: 'detachments#create'
 	end
 end

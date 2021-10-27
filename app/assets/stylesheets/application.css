@@ -230,3 +230,6 @@ hr {
 .remove-slot-model:hover {
 	cursor: pointer;
 }
+.form-group {
+	margin-bottom: 20px;
+}

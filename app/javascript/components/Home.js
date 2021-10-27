@@ -6,6 +6,7 @@ class Home extends React.Component {
 			<div>
 				Home Page
 				<a href='/team'>Team Builder</a>
+				<a href='/armies'>Armies</a>
 			</div>
 		);
 	}

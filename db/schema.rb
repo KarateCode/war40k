@@ -10,7 +10,65 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_21_135921) do
+ActiveRecord::Schema.define(version: 2021_10_27_124405) do
+
+  create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "point_battle"
+    t.integer "command_points"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "detachment_defs", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "hq_min"
+    t.integer "hq_max"
+    t.integer "troop_min"
+    t.integer "troop_max"
+    t.integer "elite_min"
+    t.integer "elite_max"
+    t.integer "fast_attack_min"
+    t.integer "fast_attack_max"
+    t.integer "heavy_support_min"
+    t.integer "heavy_support_max"
+    t.integer "flyer_min"
+    t.integer "flyer_max"
+    t.integer "fortification_min"
+    t.integer "fortification_max"
+    t.integer "lord_of_war_min"
+    t.integer "lord_of_war_max"
+    t.integer "command_cost"
+    t.text "desc"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "detachment_unit_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.integer "detachment_unit_id"
+    t.integer "slot_id"
+    t.integer "index"
+    t.integer "model_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "detachment_units", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "type"
+    t.integer "unit_id"
+    t.integer "detachment_id"
+    t.integer "variation_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "detachments", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.integer "army_id"
+    t.integer "detachment_def_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "models", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "type"

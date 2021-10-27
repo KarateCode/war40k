@@ -190,8 +190,6 @@ class TeamBuilder extends React.Component {
 		} = this.state
 
 		const unit = _.get(unitsById, [selectedUnitId])
-		console.log('unitsCheckedA:');
-		console.log(require('util').inspect(unitsCheckedA, false, null));
 		const unitPointsA = _(unitsCheckedA)
 			.toPairs()
 			.filter((pair) => pair[1].included)
@@ -206,10 +204,7 @@ class TeamBuilder extends React.Component {
 			.map((slotEntry) => _.values(slotEntry))
 			.flatten()
 			.map((modelId) => _.get(modelsById, [modelId, 'points'], 0))
-			// .value()
 			.sum()
-		console.log('variationPointsA:');
-		console.log(require('util').inspect(variationPointsA, false, null));
 		const totalA = unitPointsA + variationPointsA;
 		const totalB = _(unitsCheckedB)
 			.toPairs()
