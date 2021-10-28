@@ -1,5 +1,6 @@
 @import "detachment.css";
 @import "home.css";
+@import "armies.css";
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -343,4 +344,11 @@ hr {
 	color: #333333;
 	width: 100%;
 	font-family: 'Orbitron', sans-serif;
+}
+.radio-group {
+	margin-bottom: 15px;
+}
+.radio-group input[type="radio"] {
+	margin-left: 30px;
+	margin-right: 10px;
 }

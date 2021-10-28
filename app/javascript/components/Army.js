@@ -135,13 +135,11 @@ class Army extends React.Component {
 						<div className='bottom-buttons__right'>
 							<a className='btn'
 								onClick={this.handleCreateDetachment}>
-								Create Order
+								Create Detachment
 							</a>
 						</div>
 					</div>
-
 				</Modal>
-
 			</div>
 		);
 	}
