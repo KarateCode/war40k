@@ -72,36 +72,39 @@ class Army extends React.Component {
 
 		return (
 			<div className='Detachments'>
-				<h1>Army: {army.name}</h1>
+				<header>{army.name}</header>
 
-				<table>
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Type</th>
-						</tr>
-					</thead>
-					<tbody>
-						{detachments.map((detachment) => (
-							<tr key={`detachment-${detachment.id}`}>
-								<td>
-									<a href={`/detachments/${detachment.id}`}>
-										{detachment.name}
-									</a>
-								</td>
-								<td>
-									<a href={`/detachments/${detachment.id}`}>
-										{detachmentDefById[detachment.detachment_def_id].name}
-									</a>
-								</td>
+				<div className='main-body'>
+					<table className='table has-clickable-rows'>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Type</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{detachments.map((detachment) => (
+								<tr key={`detachment-${detachment.id}`}>
+									<td className='link-field'>
+										<a href={`/detachments/${detachment.id}`}>
+											{detachment.name}
+										</a>
+									</td>
+									<td className='link-field'>
+										<a href={`/detachments/${detachment.id}`}>
+											{detachmentDefById[detachment.detachment_def_id].name}
+										</a>
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 
-				<a onClick={this.handleToggleDetachmentModal}>
-					Add Detachment
-				</a>
+					<a className='btn' onClick={this.handleToggleDetachmentModal}>
+						Add Detachment
+					</a>
+				</div>
+
 
 				<Modal
 					headerText='Add Detachment'
@@ -111,6 +114,7 @@ class Army extends React.Component {
 					<div className='form-group'>
 						<label htmlFor='name-input'>Name:</label>
 						<input type='text'
+							className='form-control'
 							id='name-input'
 							autoFocus
 							onChange={this.handleNameChange}
@@ -127,11 +131,12 @@ class Army extends React.Component {
 					</div>
 
 					<div className='bottom-buttons'>
+						<div className='bottom-buttons__left' />
 						<div className='bottom-buttons__right'>
-							<button type='submit' className='btn btn-success'
+							<a className='btn'
 								onClick={this.handleCreateDetachment}>
 								Create Order
-							</button>
+							</a>
 						</div>
 					</div>
 

@@ -41,6 +41,8 @@ Notes for next time:
 
 # make sure to use node 10.17
 # don't use --api; it kills all erb!
+# For LESS install attempt:
+# https://www.reddit.com/r/rails/comments/er0t2a/anyone_successfully_using_less_css_with_a_rails_6/
 # https://guides.rubyonrails.org/getting_started.html
 # https://www.freecodecamp.org/news/how-to-create-a-rails-project-with-a-react-and-redux-front-end-8b01e17a1db/
 npm install --save react-router-dom

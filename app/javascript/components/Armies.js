@@ -22,26 +22,32 @@ class Armies extends React.Component {
 
 		return (
 			<div className='Armies'>
-				<h1>Armies</h1>
+				<header>Armies</header>
 
-				<table>
-					<thead>
-						<tr>
-							<th>Name</th>
-							<th>Point Battle</th>
-							<th>Command Points</th>
-						</tr>
-					</thead>
-					<tbody>
-						{armies.map((set) => (
-							<tr key={`set-${set.id}`}>
-								<td><a href={`/armies/${set.id}`}>{set.name}</a></td>
-								<td>{set.point_battle}</td>
-								<td>{set.command_points}</td>
+				<div className='main-body'>
+					<table className='table has-clickable-rows'>
+						<thead>
+							<tr>
+								<th>Name</th>
+								<th>Point Battle</th>
+								<th>Command Points</th>
 							</tr>
-						))}
-					</tbody>
-				</table>
+						</thead>
+						<tbody>
+							{armies.map((set) => (
+								<tr key={`set-${set.id}`}>
+									<td className='link-field'><a href={`/armies/${set.id}`}>{set.name}</a></td>
+									<td className='link-field'><a href={`/armies/${set.id}`}>{set.point_battle}</a></td>
+									<td className='link-field'><a href={`/armies/${set.id}`}>{set.command_points}</a></td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+
+					<a className='btn' onClick={this.handleAddArmy}>
+						Add Army
+					</a>
+				</div>
 			</div>
 		);
 	}

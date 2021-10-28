@@ -14,6 +14,7 @@ Rails.application.routes.draw do
 		get '/armies/:id', to: 'armies#show'
 		get '/detachment_defs', to: 'detachment_defs#index'
 
+		get '/detachments/:id', to: 'detachments#show'
 		post '/detachments', to: 'detachments#create'
 	end
 end

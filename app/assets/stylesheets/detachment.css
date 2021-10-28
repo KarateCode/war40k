@@ -1,0 +1,39 @@
+.Detachment .title {
+    font-size: 24px;
+    display: flex;
+}
+.Detachment .title .spacer {
+    flex-grow: 1;
+}
+
+.Detachment .desc {
+    display: inline-block;
+    width: 31%;
+    border-right: 2px solid black;
+    margin-right: 2%;
+}
+.Detachment .units {
+    display: inline-flex;
+    width: 66%;
+}
+.Detachment .units .unit-type {
+    height: 40px;
+    text-align: center;
+}
+.Detachment .units .unit-symbol {
+    text-align: center;
+    font-size: 48px;
+    transform: rotate(180deg);
+}
+
+.Detachment .units .unit-min-max {
+    text-align: center;
+}
+.units .hq,
+.units .troops,
+.units .elites,
+.units .fast-attacks,
+.units .heavy-supports,
+.units .flyers {
+    width: 100px;
+}

@@ -1,3 +1,5 @@
+@import "detachment.css";
+@import "home.css";
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -19,6 +21,110 @@ body {
 	/*color: green;*/
 	font-family: 'Orbitron', sans-serif;
 	margin: 0;
+}
+
+header {
+	padding-top: 30px;
+	padding-bottom: 30px;
+	background-color: black;
+	color: #F12E21;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	font-size: 24px;
+	text-align: center;
+}
+
+.table {
+    width: 100%;
+    border-spacing: 0;
+    margin-bottom: 30px;
+
+    .number-th,
+    .currency-th,
+    .number-td,
+    .currency-td {
+        text-align: right;
+    }
+}
+
+.table thead th {
+    border-bottom: 2px solid #e6e6e6;
+    padding: 10px;
+    padding: 0;
+
+    .sort-field-indicators .border-color-branded {
+        border-right-color: transparent;
+        border-left-color: transparent;
+    }
+
+/*    &.dragHandle-th {
+        width: 30px;
+    }
+*/
+}
+.table thead th {
+    padding: 10px;
+    text-align: left;
+}
+.table thead th,
+.table thead th .Anchor {
+    font-size: 16px;
+    font-weight: 500;
+}
+.table tbody tr {
+    border-top: 1px solid #e6e6e6;
+}
+.table.has-clickable-rows > tbody > tr:hover {
+    background-color: #f2f2f2;
+}
+.table tbody td {
+    line-height: 30px;
+    vertical-align: middle;
+    padding: 10px;
+
+    .btn {
+        height: 30px;
+        line-height: 30px;
+    }
+
+}
+.table tbody .link-field {
+    padding: 0;
+}
+.table tbody .link-field a {
+    padding: 10px;
+    color: #666;
+    width: 100%;
+    display: block;
+    text-decoration: none;
+}
+.table tbody .link-field a:hover {
+    text-decoration: none;
+}
+
+.btn {
+	background-color: black;
+	color: #8DF57B;
+	border-radius: 5px;
+	padding: 10px;
+	padding-left: 15px;
+	padding-right: 15px;
+}
+a.btn:hover {
+	cursor: pointer;
+}
+
+.bottom-buttons {
+	display: flex;
+}
+.bottom-buttons .bottom-buttons__left {
+	flex-grow: 1;
+}
+
+.main-body {
+	margin: 30px;
+	margin-top: 100px;
 }
 
 .power {
@@ -61,16 +167,6 @@ body {
 }
 .unit:first-of-type {
 	text-align: right;
-}
-
-header {
-	padding-top: 30px;
-	padding-bottom: 30px;
-	background-color: black;
-	color: #F12E21;
-	position: fixed;
-	width: 100%;
-	top: 0;
 }
 
 hr {
@@ -230,6 +326,21 @@ hr {
 .remove-slot-model:hover {
 	cursor: pointer;
 }
+
 .form-group {
-	margin-bottom: 20px;
+	margin-bottom: 30px;
+}
+.form-group label {
+	display: block;
+	margin-bottom: 10px;
+}
+.form-group .form-control {
+	height: 32px;
+	font-size: 16px;
+	border: 1px solid #CCCCCC;
+	border-radius: 4px;
+	padding-left: 10px;
+	color: #333333;
+	width: 100%;
+	font-family: 'Orbitron', sans-serif;
 }

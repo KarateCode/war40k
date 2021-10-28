@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_27_124405) do
+ActiveRecord::Schema.define(version: 2021_10_27_203833) do
 
   create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -39,9 +39,11 @@ ActiveRecord::Schema.define(version: 2021_10_27_124405) do
     t.integer "lord_of_war_min"
     t.integer "lord_of_war_max"
     t.integer "command_cost"
-    t.text "desc"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "restrictions"
+    t.string "command_benefits"
+    t.string "dedicated_transports"
   end
 
   create_table "detachment_unit_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

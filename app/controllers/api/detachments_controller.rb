@@ -4,6 +4,11 @@ class Api::DetachmentsController < ApplicationController
 		render json: detachment.to_json
 	end
 
+	def show
+		detachment = Detachment.find params[:id]
+		render json: detachment.to_json
+	end
+
 	private
 	def detachment_params
 		params.require(:detachment).permit(:name, :army_id, :detachment_def_id)

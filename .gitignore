@@ -35,5 +35,8 @@
 yarn-debug.log*
 .yarn-integrity
 
+# eslint
+.eslintcache
+
 */.DS_Store
 */**/.DS_Store
