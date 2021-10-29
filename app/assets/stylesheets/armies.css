@@ -1,4 +1,9 @@
 .form-group label.point-battle-label {
-    display: inline;
-    color: green;
+	display: inline;
+	color: green;
+}
+
+.placeholder {
+	width: 75px;
+	display: block;
 }

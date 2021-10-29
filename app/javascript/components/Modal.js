@@ -5,6 +5,7 @@ const PropTypes = require('prop-types');
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
+const bindReactClass = require('lib/bind-react-class');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const classNames = require('classnames');
@@ -66,6 +67,22 @@ class Modal extends React.Component {
 	//         }
 	//     }
 	// }
+
+	componentDidMount() {
+		/* eslint-disable scanjs-rules/call_addEventListener */
+		document.addEventListener('keydown', this.escFunction, false);
+		/* eslint-enable scanjs-rules/call_addEventListener */
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener('keydown', this.escFunction, false);
+	}
+
+	escFunction(event) {
+		if (event.keyCode === 27) {
+			this.props.onDismiss();
+		}
+	}
 
 	handleDismiss(e) {
 		e.preventDefault();
@@ -175,4 +192,4 @@ Modal.displayName = displayName;
 Modal.propTypes = propTypes;
 Modal.defaultProps = defaultProps;
 
-module.exports = Modal;
+module.exports = bindReactClass(Modal);

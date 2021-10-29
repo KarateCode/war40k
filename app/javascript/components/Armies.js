@@ -11,7 +11,7 @@ class Armies extends React.Component {
 		super(props)
 		this.state = {
 			armies: [],
-			showAddArmyModal: true,
+			showAddArmyModal: false,
 			newArmy: {
 				name: '',
 				'point_battle': null,
@@ -79,8 +79,9 @@ class Armies extends React.Component {
 		return (
 			<div className='Armies'>
 				<header>
-					<a className='btn btn-cancel left' href='/'>Back</a>
-					Armies
+					<span className='left'><a className='btn btn-cancel left' href='/'>Back</a></span>
+					<span className='middle'>Armies</span>
+					<span className='right'><span className='placeholder'> </span></span>
 				</header>
 
 				<div className='main-body'>

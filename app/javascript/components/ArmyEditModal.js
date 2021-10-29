@@ -98,7 +98,9 @@ const ArmyEditModal = ({army, show, onSaveArmy, onDismiss}) => {
 				</div>
 
 				<div className='bottom-buttons'>
-					<div className='bottom-buttons__left' />
+					<div className='bottom-buttons__left fix'>
+						<a className='btn btn-cancel' onClick={onDismiss}>Cancel</a>
+					</div>
 					<div className='bottom-buttons__right'>
 						<input className='btn' type='submit' value={(army.id) ? 'Update Army' : 'Create Army'} />
 					</div>
