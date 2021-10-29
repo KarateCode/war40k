@@ -24,6 +24,11 @@ body {
 	margin: 0;
 }
 
+a:hover {
+	cursor: pointer;
+	text-decoration: none;
+}
+
 header {
 	padding-top: 30px;
 	padding-bottom: 30px;
@@ -34,6 +39,9 @@ header {
 	top: 0;
 	font-size: 24px;
 	text-align: center;
+}
+header .left {
+	/*float: left;*/
 }
 
 .table {
@@ -103,17 +111,35 @@ header {
 .table tbody .link-field a:hover {
     text-decoration: none;
 }
+.table tbody .icon-field {
+	width: 15px;
+}
+.table tbody .icon-field.edit {
+	color: green;
+}
+.table tbody .icon-field.delete {
+	color: red;
+}
 
 .btn {
 	background-color: black;
 	color: #8DF57B;
 	border-radius: 5px;
+	border: 0;
+	height: 40px;
 	padding: 10px;
 	padding-left: 15px;
 	padding-right: 15px;
+	font-size: 16px;
+	font-family: 'Orbitron', sans-serif;
 }
-a.btn:hover {
+.btn:hover {
 	cursor: pointer;
+}
+.btn.btn-cancel {
+	background-color: #ccc;
+	color: #407837;
+	text-decoration-line: none;
 }
 
 .bottom-buttons {

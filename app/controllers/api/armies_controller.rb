@@ -9,10 +9,14 @@ class Api::ArmiesController < ApplicationController
         render json: army.to_json
     end
 
+    def update
+        army = Army.find params[:id]
+        army.update army_params
+        render json: army.to_json
+    end
+
     def show
         army = Army.find params[:id]
-        puts 'army:'
-        puts army.inspect
         render json: army.to_json
     end
 
@@ -23,6 +27,6 @@ class Api::ArmiesController < ApplicationController
 
     private
     def army_params
-        params.require(:army).permit(:name, :point_battle, :command_points)
+        params.require(:army).permit(:id, :name, :point_battle, :command_points)
     end
 end

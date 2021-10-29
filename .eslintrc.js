@@ -31,7 +31,7 @@ module.exports = {
     "rules": {
         "arrow-parens": [2, "always"],
         "brace-style": [2, "1tbs", {"allowSingleLine": true}],
-        "camelcase": 2,
+        // "camelcase": 2,
         "comma-dangle": [2, {
             "arrays": "always-multiline",
             "objects": "always-multiline",
@@ -150,7 +150,7 @@ module.exports = {
         "react/jsx-indent": [2, 'tab'],
         "react/jsx-indent-props": [2, 'tab'],
         "react/jsx-key": 2,
-        "react/jsx-no-bind": 2,
+        // "react/jsx-no-bind": 2,
         "react/jsx-no-comment-textnodes": 2,
         "react/jsx-no-duplicate-props": 2,
         "react/jsx-no-target-blank": 2,
