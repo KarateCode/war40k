@@ -4,8 +4,7 @@ import React from 'react'
 const _ = require('lodash');
 const axios = require('axios');
 const bindReactClass = require('lib/bind-react-class');
-const Selectimus = require('components/Selectimus');
-const Modal = require('components/Modal');
+const {default: DetachmentEditModal} = require('components/DetachmentEditModal');
 
 class Army extends React.Component {
 	constructor(props) {
@@ -15,11 +14,9 @@ class Army extends React.Component {
 			army: {},
 			showAddDetachmentModal: false,
 			detachmentDefs: [],
-			newDetachment: {
-				name: '',
-				'army_id': this.props.match.params.id,
-			},
+			newDetachment: {},
 			detachments: [],
+			editDetachment: {},
 		}
 	}
 
@@ -38,26 +35,33 @@ class Army extends React.Component {
 		this.setState({army})
 	}
 
-	handleDefChange(def) {
-		// Do I need an 'index' field on the detachment table?
-		const newDetachment = Object.assign({}, this.state.newDetachment, {'detachment_def_id': def.id})
-		this.setState({newDetachment})
+	handleAddDetachmentModal() {
+		this.setState({showAddDetachmentModal: true, editDetachment: {army_id: this.props.match.params.id}})
 	}
 
 	handleToggleDetachmentModal(event) {
 		this.setState({showAddDetachmentModal: !this.state.showAddDetachmentModal})
 	}
 
-	async handleCreateDetachment() {
+	async handleSaveDetachment(detachment) {
 		const token = document.querySelector('meta[name="csrf-token"]').content
 		const headers = {headers: {'X-CSRF-Token': token}}
-		await axios.post(`/api/detachments.json`, this.state.newDetachment, headers)
-		this.setState({showAddDetachmentModal: false})
+
+		if (detachment.id) {
+			await axios.put(`/api/detachments/${detachment.id}.json`, detachment, headers)
+		} else {
+			await axios.post(`/api/detachments.json`, detachment, headers)
+		}
+
+		const response2 = await axios.get(`/api/armies/${this.props.match.params.id}/detachments.json`)
+		const detachments = response2.data
+		this.setState({detachments, showAddDetachmentModal: false})
 	}
 
-	handleNameChange(event) {
-		const newDetachment = Object.assign({}, this.state.newDetachment, {name: event.target.value})
-		this.setState({newDetachment})
+	handleEditDetachment(editDetachment) {
+		return () => {
+			this.setState({showAddDetachmentModal: true, editDetachment})
+		}
 	}
 
 	render () {
@@ -66,18 +70,23 @@ class Army extends React.Component {
 			detachmentDefs,
 			detachmentDefById,
 			detachments,
-			newDetachment,
+			editDetachment,
 			showAddDetachmentModal,
 		} = this.state
 
 		return (
 			<div className='Detachments'>
-				<header>{army.name}</header>
+				<header>
+					<span className='left'><a className='btn btn-cancel left' href='/armies'>Back</a></span>
+					<span className='middle'>{army.name}</span>
+					<span className='right'><span className='placeholder'> </span></span>
+				</header>
 
 				<div className='main-body'>
 					<table className='table has-clickable-rows'>
 						<thead>
 							<tr>
+								<th> </th>
 								<th>Name</th>
 								<th>Type</th>
 							</tr>
@@ -85,6 +94,7 @@ class Army extends React.Component {
 						<tbody>
 							{detachments.map((detachment) => (
 								<tr key={`detachment-${detachment.id}`}>
+									<td className='icon-field edit'><a onClick={this.handleEditDetachment(detachment)}>✎</a></td>
 									<td className='link-field'>
 										<a href={`/detachments/${detachment.id}`}>
 											{detachment.name}
@@ -100,46 +110,17 @@ class Army extends React.Component {
 						</tbody>
 					</table>
 
-					<a className='btn' onClick={this.handleToggleDetachmentModal}>
+					<a className='btn' onClick={this.handleAddDetachmentModal}>
 						Add Detachment
 					</a>
 				</div>
 
-
-				<Modal
-					headerText='Add Detachment'
+				<DetachmentEditModal
 					show={showAddDetachmentModal}
-					onDismiss={this.handleToggleDetachmentModal}>
-
-					<div className='form-group'>
-						<label htmlFor='name-input'>Name:</label>
-						<input type='text'
-							className='form-control'
-							id='name-input'
-							autoFocus
-							onChange={this.handleNameChange}
-							value={newDetachment.name} />
-					</div>
-
-					<div className='form-group'>
-						<label htmlFor='name-input'>Choose Detachment Type:</label>
-						<Selectimus
-							options={detachmentDefs}
-							onChange={this.handleDefChange}
-							valueKey='id'
-							labelKey='name' />
-					</div>
-
-					<div className='bottom-buttons'>
-						<div className='bottom-buttons__left' />
-						<div className='bottom-buttons__right'>
-							<a className='btn'
-								onClick={this.handleCreateDetachment}>
-								Create Detachment
-							</a>
-						</div>
-					</div>
-				</Modal>
+					onDismiss={this.handleToggleDetachmentModal}
+					detachment={editDetachment}
+					detachmentDefs={detachmentDefs}
+					onSaveDetachment={this.handleSaveDetachment} />
 			</div>
 		);
 	}
