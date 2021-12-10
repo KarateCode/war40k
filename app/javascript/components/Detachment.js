@@ -1,8 +1,11 @@
+/* globals document */
 import React from 'react'
 const _ = require('lodash');
 const axios = require('axios');
 
 const bindReactClass = require('lib/bind-react-class');
+const Selectimus = require('components/Selectimus');
+const {default: VariationModal} = require('components/VariationModal');
 
 class Detachment extends React.Component {
 	constructor(props) {
@@ -11,6 +14,12 @@ class Detachment extends React.Component {
 		this.state = {
 			detachmentDefById: {},
 			detachment: {},
+			filterKeywords: [],
+			selectedUnit: undefined,
+			units: undefined,
+			keywords: undefined,
+			unitsByRole: undefined,
+			unitsById: undefined,
 		}
 	}
 
@@ -24,99 +33,267 @@ class Detachment extends React.Component {
 		const detachment = response2.data
 		this.setState({detachment})
 
-		// const response3 = await axios.get(`/api/armies/${this.props.match.params.id}.json`)
-		// const army = response3.data
-		// this.setState({army})
+		const response3 = await axios.get(`/api/units.json`)
+		const units = response3.data
+		const keywords = _(units)
+			.filter('keywords')
+			.map('keyword_array')
+			.flatten()
+			.uniq()
+			.map((keyword) => ({key: keyword, value: keyword}))
+			.value()
+
+		const unitsByRole = _.groupBy(units, 'battlefield_role')
+		const unitsById = _.keyBy(units, 'id')
+		this.setState({units, keywords, unitsByRole, unitsById})
+	}
+
+	handleKeywordChange(selectedKeywords) {
+		const {units} = this.state
+		const filterKeywords = _.map(selectedKeywords, 'value')
+		const filterFunc = (unit) => {
+			if (filterKeywords.length === 0) {return true}
+			return _.intersection(unit.keyword_array, filterKeywords).length > 0
+		}
+		const unitsByRole = _(units)
+			.filter(filterFunc)
+			.groupBy('battlefield_role')
+			.value()
+
+		this.setState({unitsByRole})
+	}
+
+	handleUnitClick(unit) {
+		return async (event) => {
+			const {detachment} = this.state;
+			detachment.detachment_units = detachment.detachment_units || [];
+
+			const detachment_unit = _.find(detachment.detachment_units, {unit_id: unit.id})
+			if (detachment_unit) {
+				_.remove(detachment.detachment_units, {unit_id: unit.id})
+			} else {
+				detachment.detachment_units.push({unit_id: unit.id, detachment_id: detachment.id})
+			}
+
+			if (!detachment_unit && _.get(unit, 'variations.length')) {
+				this.setState({selectedUnit: unit})
+			}
+
+			const token = document.querySelector('meta[name="csrf-token"]').content
+			const headers = {headers: {'X-CSRF-Token': token}}
+			const response = await axios.put(`/api/detachments/${this.props.match.params.id}.json`, detachment, headers)
+			this.setState({detachment: response.data})
+		}
+	}
+
+	handleDismissVariationModal() {
+		this.setState({selectedUnit: null})
+	}
+
+	async handleSetVariation({detachmentUnitId, slots, variationId}) {
+		const {detachment} = this.state;
+		const detachmentUnit = _.find(detachment.detachment_units, {id: detachmentUnitId})
+		detachmentUnit.detachment_unit_slots = slots
+		detachmentUnit.variation_id = variationId
+		const token = document.querySelector('meta[name="csrf-token"]').content
+		const headers = {headers: {'X-CSRF-Token': token}}
+		await axios.put(`/api/detachments/${this.props.match.params.id}.json`, detachment, headers)
+	}
+
+	handleEditVariations(unit) {
+		return (event) => {
+			event.preventDefault();
+
+			if (_.get(unit, 'variations.length')) {
+				this.setState({selectedUnit: unit})
+			}
+		}
 	}
 
 	render () {
-		const {detachment, detachmentDefById} = this.state
+		const {detachment, detachmentDefById, keywords, selectedUnit, unitsByRole, unitsById} = this.state
 		const detachmentDef = (detachment.detachment_def_id)
 			? detachmentDefById[detachment.detachment_def_id]
 			: undefined
+		const selectedUnitIds = _.map(detachment.detachment_units, 'unit_id')
+		const total = _(detachment.detachment_units)
+			.map('unit_id')
+			.map((id) => _.get(unitsById, [id, 'points']))
+			.sum()
+		const detachmentUnit = (selectedUnit)
+			? _.find(detachment.detachment_units, {unit_id: selectedUnit.id})
+			: null
 
 		return (detachmentDef) ? (
 			<div className='Detachment'>
-				<header>{detachment.name}</header>
+				<header>
+					<span className='left'><a className='btn btn-cancel left' href={`/armies/${detachment.army_id}`}>Back</a></span>
+					<span className='middle'>{detachment.name}</span>
+					<span className='right'>Total: {total}</span>
+				</header>
 
 				<div className='detachment main-body'>
 					<div className='title'>
-						<span>{detachmentDef.name}</span>
+						<span className='detachment-name'>{detachmentDef.name.toUpperCase()}</span>
 						<span className='spacer'>.....</span>
 						<span>COMMAND COST: {detachmentDef.command_cost}CP</span>
 					</div>
 
 					<div className='body'>
 						<div className='desc'>
-							<div>
-								Restrictions: {detachmentDef.restrictions}
+							<div className='desc-row'>
+								<label>Restrictions:</label>{detachmentDef.restrictions}
 							</div>
-							<div>
-								Command Benefits: {detachmentDef.command_benefits}
+							<div className='desc-row'>
+								<label>Command Benefits:</label>{detachmentDef.command_benefits}
 							</div>
-							<div>
-								Dedicated Transports: {detachmentDef.dedicated_transports}
+							<div className='desc-row'>
+								<label>Dedicated Transports:</label>{detachmentDef.dedicated_transports}
+							</div>
+
+							<div className='desc-row'>
+								<Selectimus
+									onChange={this.handleKeywordChange}
+									multiple={true}
+									labelKey='key'
+									valueKey='value'
+									options={keywords} />
 							</div>
 						</div>
 
 						<div className='units'>
 							{(detachmentDef.hq_max > 0) && (
-								<div className='hq'>
+								<div className='role hq'>
 									<div className='unit-type'>HQ</div>
 									<div className='unit-min-max'>{detachmentDef.hq_min}-{detachmentDef.hq_max}</div>
 									{_.range(detachmentDef.hq_max).map((index) => (
 										<div className='unit-symbol' key={`hq-${index}`}>☠︎</div>
 									))}
+
+									{_.get(unitsByRole, 'HQ', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											<div>{unit.name}</div>
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
+									))}
 								</div>
 							)}
 							{(detachmentDef.troop_max > 0) && (
-								<div className='troops'>
+								<div className='role troops'>
 									<div className='unit-type'>TROOPS</div>
 									<div className='unit-min-max'>{detachmentDef.troop_min}-{detachmentDef.troop_max}</div>
 									{_.range(detachmentDef.troop_max).map((index) => (
-										<div className='unit-symbol' key={`troop-${index}`}>◁</div>
+										<div className='unit-symbol troops-icon' key={`troop-${index}`}>◁</div>
+									))}
+
+									{_.get(unitsByRole, 'Troops', []).map((unit) => (
+										<React.Fragment key={`unit-${unit.id}`}>
+											<div
+												className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+												onClick={this.handleUnitClick(unit)}>
+												{unit.name}
+												<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+												<div>{unit.points} V</div>
+											</div>
+											<div>
+												<a className='edit-variation'
+													onClick={this.handleEditVariations(unit)}>
+													Edit icon
+												</a>
+											</div>
+										</React.Fragment>
 									))}
 								</div>
 							)}
 							{(detachmentDef.elite_max > 0) && (
-								<div className='elites'>
+								<div className='role elites'>
 									<div className='unit-type'>ELITES</div>
 									<div className='unit-min-max'>{detachmentDef.elite_min}-{detachmentDef.elite_max}</div>
 									{_.range(detachmentDef.elite_max).map((index) => (
 										<div className='unit-symbol' key={`elite-${index}`}>✠</div>
 									))}
+
+									{_.get(unitsByRole, 'Elites', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											{unit.name}
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
+									))}
 								</div>
 							)}
 							{(detachmentDef.fast_attack_max > 0) && (
-								<div className='fast-attacks'>
+								<div className='role fast-attacks'>
 									<div className='unit-type'>FAST ATTACK</div>
 									<div className='unit-min-max'>{detachmentDef.fast_attack_min}-{detachmentDef.fast_attack_max}</div>
 									{_.range(detachmentDef.fast_attack_max).map((index) => (
 										<div className='unit-symbol' key={`fast-attack-${index}`}>⚡︎</div>
 									))}
+
+									{_.get(unitsByRole, 'Fast Attack', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											{unit.name}
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
+									))}
 								</div>
 							)}
 							{(detachmentDef.heavy_support_max > 0) && (
-								<div className='heavy-supports'>
+								<div className='role heavy-supports'>
 									<div className='unit-type'>HEAVY SUPPORT</div>
 									<div className='unit-min-max'>{detachmentDef.heavy_support_min}-{detachmentDef.heavy_support_max}</div>
 									{_.range(detachmentDef.heavy_support_max).map((index) => (
 										<div className='unit-symbol' key={`heavy-support-${index}`}>❋</div>
 									))}
+
+									{_.get(unitsByRole, 'Heavy Support', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											{unit.name}
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
+									))}
 								</div>
 							)}
 							{(detachmentDef.flyer_max > 0) && (
-								<div className='flyers'>
+								<div className='role flyers'>
 									<div className='unit-type'>FLYERS</div>
 									<div className='unit-min-max'>{detachmentDef.flyer_min}-{detachmentDef.flyer_max}</div>
 									{_.range(detachmentDef.flyer_max).map((index) => (
 										<div className='unit-symbol' key={`flyer-${index}`}>🦋</div>
+									))}
+
+									{_.get(unitsByRole, 'Flyers', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											{unit.name}
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
 									))}
 								</div>
 							)}
 						</div>
 					</div>
 				</div>
+
+				<VariationModal
+					show={Boolean(selectedUnit)}
+					onDismiss={this.handleDismissVariationModal}
+					onSubmit={this.handleSetVariation}
+					detachmentUnit={detachmentUnit}
+					unit={selectedUnit} />
 			</div>
 		) : null;
 	}

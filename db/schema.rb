@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_27_203833) do
+ActiveRecord::Schema.define(version: 2021_11_26_145158) do
 
   create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -48,11 +48,11 @@ ActiveRecord::Schema.define(version: 2021_10_27_203833) do
 
   create_table "detachment_unit_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.integer "detachment_unit_id"
-    t.integer "slot_id"
-    t.integer "index"
-    t.integer "model_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "slot_def_id"
+    t.string "model_type"
+    t.json "models"
   end
 
   create_table "detachment_units", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -98,6 +98,8 @@ ActiveRecord::Schema.define(version: 2021_10_27_203833) do
     t.string "color"
     t.integer "points"
     t.text "desc"
+    t.string "keywords"
+    t.string "battlefield_role"
   end
 
   create_table "variation_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

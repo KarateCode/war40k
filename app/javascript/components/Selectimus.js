@@ -8,8 +8,6 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const Select = require('react-select').default;
 const {components} = require('react-select');
-// const {$t} = require('_lib/jargon-translator');
-// const InfiniteScroll = require('_components/InfiniteScroll');
 
 const {any, array, bool, func, string} = PropTypes;
 

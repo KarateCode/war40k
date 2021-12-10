@@ -148,6 +148,7 @@ header .middle {
 
 .bottom-buttons {
 	display: flex;
+    margin-top: 30px;
 }
 .bottom-buttons .bottom-buttons__left {
 	flex-grow: 1;
