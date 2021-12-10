@@ -293,6 +293,7 @@ hr {
 }
 
 .slot {
+	color: black;
 	margin-left: 30px;
 }
 
@@ -351,6 +352,7 @@ hr {
 .slot .Selectimus {
 	width: 80%;
 	display: inline-block;
+	margin-top: 10px;
 }
 
 .slot-points {
@@ -387,4 +389,16 @@ hr {
 .radio-group input[type="radio"] {
 	margin-left: 30px;
 	margin-right: 10px;
+}
+
+.variation-name {
+	margin-bottom: 20px;
+	margin-top: 20px;
+	font-weight: bold;
+}
+.variation-label {
+	color: green;
+}
+.model-type-name {
+	margin-top: 10px;
 }

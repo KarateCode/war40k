@@ -91,8 +91,9 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 		}
 	}
 
-	function handleSubmit() {
-		onSubmit({detachmentUnitId: passedDetachmentUnit.id, slots, variationId})
+	async function handleSubmit() {
+		await onSubmit({detachmentUnitId: passedDetachmentUnit.id, slots, variationId})
+		onDismiss()
 	}
 
 	return (
@@ -103,20 +104,20 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 
 			{(_.get(unit, 'variations', [])).map((variation) => (
 				<React.Fragment key={`variation-${variation.id}`}>
-					<div>
+					<div className='variation-name'>
 						<input
 							type='radio'
 							name={`variation-radio-${unit.id}`}
 							id={`variation-radio-${variation.id}`}
 							checked={variationId === variation.id}
 							onChange={() => handleVariationIdChange(variation.id)} />
-						<label htmlFor={`variation-radio-${variation.id}`}> {variation.name}</label>
+						<label htmlFor={`variation-radio-${variation.id}`} className='variation-label'> {variation.name}</label>
 					</div>
 
 					{(variationId === variation.id) &&
 						_.get(variation, 'slots', []).map((slot) => (
 							<div key={`slot-${slot.id}`} className='slot'>
-								{slot.model_type}
+								<div className='model-type-name'>{slot.model_type}</div>
 								{_.range(slot.number_of_models).map((index) => (
 									<div key={`slot-${slot.id}-${index}`}>
 										<Selectimus
