@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 		get '/units', to: 'units#index'
 		get '/units/:id/variations', to: 'units#variations'
 		get '/units/:id/variation-models', to: 'units#variation_models'
+		get '/units/all-models', to: 'units#all_models'
 
 		get '/armies', to: 'armies#index'
 		post '/armies', to: 'armies#create'

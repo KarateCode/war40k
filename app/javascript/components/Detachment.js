@@ -45,7 +45,14 @@ class Detachment extends React.Component {
 
 		const unitsByRole = _.groupBy(units, 'battlefield_role')
 		const unitsById = _.keyBy(units, 'id')
-		this.setState({units, keywords, unitsByRole, unitsById})
+
+		const response4 = await axios.get(`/api/units/all-models.json`)
+		const models = response4.data;
+		const modelsById = _.keyBy(models, 'id')
+		console.log('modelsById:');
+		console.log(require('util').inspect(modelsById, false, null));
+
+		this.setState({units, keywords, unitsByRole, unitsById, modelsById})
 	}
 
 	handleKeywordChange(selectedKeywords) {
@@ -111,15 +118,28 @@ class Detachment extends React.Component {
 	}
 
 	render () {
-		const {detachment, detachmentDefById, keywords, selectedUnit, unitsByRole, unitsById} = this.state
+		const {
+			detachment, detachmentDefById, keywords, modelsById, selectedUnit, unitsByRole, unitsById,
+		} = this.state
+
 		const detachmentDef = (detachment.detachment_def_id)
 			? detachmentDefById[detachment.detachment_def_id]
 			: undefined
 		const selectedUnitIds = _.map(detachment.detachment_units, 'unit_id')
-		const total = _(detachment.detachment_units)
+		const unitTotal = _(detachment.detachment_units)
 			.map('unit_id')
 			.map((id) => _.get(unitsById, [id, 'points']))
 			.sum()
+		const variationTotal = _(detachment.detachment_units)
+			.filter('detachment_unit_slots.length')
+			.map('detachment_unit_slots')
+			.flatten()
+			.map('models')
+			.flatten()
+			.map(({model_id}) => _.get(modelsById, [model_id, 'points']))
+			.sum()
+
+		const total = unitTotal + variationTotal
 		const detachmentUnit = (selectedUnit)
 			? _.find(detachment.detachment_units, {unit_id: selectedUnit.id})
 			: null
