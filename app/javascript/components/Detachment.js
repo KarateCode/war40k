@@ -49,8 +49,6 @@ class Detachment extends React.Component {
 		const response4 = await axios.get(`/api/units/all-models.json`)
 		const models = response4.data;
 		const modelsById = _.keyBy(models, 'id')
-		console.log('modelsById:');
-		console.log(require('util').inspect(modelsById, false, null));
 
 		this.setState({units, keywords, unitsByRole, unitsById, modelsById})
 	}

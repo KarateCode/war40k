@@ -28,9 +28,15 @@ class Api::DetachmentsController < ApplicationController
 		end
 
 		unit_ids = params[:detachment_units].map{|unit| unit[:unit_id]}
-		DetachmentUnit.connection.execute "DELETE from detachment_units
-		WHERE detachment_id = #{params[:id]}
-		AND unit_id NOT IN (#{unit_ids.join(', ')});"
+		if unit_ids.size > 0
+			DetachmentUnit.connection.execute "DELETE from detachment_units
+			WHERE detachment_id = #{params[:id]}
+			AND unit_id NOT IN (#{unit_ids.join(', ')});"
+		else
+			# Case for removing last unit from detachment
+			DetachmentUnit.connection.execute "DELETE from detachment_units
+			WHERE detachment_id = #{params[:id]};"
+		end
 
 		render json: detachment.to_json
 	end
