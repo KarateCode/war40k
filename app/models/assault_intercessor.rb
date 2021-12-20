@@ -1,0 +1,2 @@
+class AssaultIntercessor < Model
+end
