@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_26_145158) do
+ActiveRecord::Schema.define(version: 2021_12_20_195021) do
 
   create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -70,6 +70,7 @@ ActiveRecord::Schema.define(version: 2021_11_26_145158) do
     t.integer "detachment_def_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "points"
   end
 
   create_table "models", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

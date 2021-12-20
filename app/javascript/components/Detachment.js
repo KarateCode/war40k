@@ -83,6 +83,7 @@ class Detachment extends React.Component {
 			if (!detachment_unit && _.get(unit, 'variations.length')) {
 				this.setState({selectedUnit: unit})
 			}
+			detachment.points = this.totalPoints()
 
 			const token = document.querySelector('meta[name="csrf-token"]').content
 			const headers = {headers: {'X-CSRF-Token': token}}
@@ -100,6 +101,7 @@ class Detachment extends React.Component {
 		const detachmentUnit = _.find(detachment.detachment_units, {id: detachmentUnitId})
 		detachmentUnit.detachment_unit_slots = slots
 		detachmentUnit.variation_id = variationId
+		detachment.points = this.totalPoints()
 		const token = document.querySelector('meta[name="csrf-token"]').content
 		const headers = {headers: {'X-CSRF-Token': token}}
 		await axios.put(`/api/detachments/${this.props.match.params.id}.json`, detachment, headers)
@@ -115,15 +117,9 @@ class Detachment extends React.Component {
 		}
 	}
 
-	render () {
-		const {
-			detachment, detachmentDefById, keywords, modelsById, selectedUnit, unitsByRole, unitsById,
-		} = this.state
+	totalPoints() {
+		const {detachment, modelsById, unitsById} = this.state
 
-		const detachmentDef = (detachment.detachment_def_id)
-			? detachmentDefById[detachment.detachment_def_id]
-			: undefined
-		const selectedUnitIds = _.map(detachment.detachment_units, 'unit_id')
 		const unitTotal = _(detachment.detachment_units)
 			.map('unit_id')
 			.map((id) => _.get(unitsById, [id, 'points']))
@@ -137,7 +133,20 @@ class Detachment extends React.Component {
 			.map(({model_id}) => _.get(modelsById, [model_id, 'points']))
 			.sum()
 
-		const total = unitTotal + variationTotal
+		return unitTotal + variationTotal
+	}
+
+	render () {
+		const {
+			detachment, detachmentDefById, keywords, selectedUnit, unitsByRole,
+		} = this.state
+
+		const detachmentDef = (detachment.detachment_def_id)
+			? detachmentDefById[detachment.detachment_def_id]
+			: undefined
+		const selectedUnitIds = _.map(detachment.detachment_units, 'unit_id')
+
+		const total = this.totalPoints()
 		const detachmentUnit = (selectedUnit)
 			? _.find(detachment.detachment_units, {unit_id: selectedUnit.id})
 			: null

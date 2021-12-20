@@ -89,6 +89,7 @@ class Army extends React.Component {
 								<th> </th>
 								<th>Name</th>
 								<th>Type</th>
+								<th>Points</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -103,6 +104,11 @@ class Army extends React.Component {
 									<td className='link-field'>
 										<a href={`/detachments/${detachment.id}`}>
 											{detachmentDefById[detachment.detachment_def_id].name}
+										</a>
+									</td>
+									<td className='link-field'>
+										<a href={`/detachments/${detachment.id}`}>
+											{detachment.points || 0}
 										</a>
 									</td>
 								</tr>
