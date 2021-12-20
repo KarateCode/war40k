@@ -216,12 +216,14 @@ class Detachment extends React.Component {
 												<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
 												<div>{unit.points} V</div>
 											</div>
-											<div>
-												<a className='edit-variation'
-													onClick={this.handleEditVariations(unit)}>
-													Edit icon
-												</a>
-											</div>
+											{_.includes(selectedUnitIds, unit.id) && (
+												<div>
+													<a className='edit-variation' title='Edit Variation'
+														onClick={this.handleEditVariations(unit)}>
+														Edit
+													</a>
+												</div>
+											)}
 										</React.Fragment>
 									))}
 								</div>

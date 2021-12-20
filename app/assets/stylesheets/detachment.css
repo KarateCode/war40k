@@ -89,5 +89,7 @@
 }
 
 .edit-variation {
-    position: absolute;
+    position: relative;
+    left: 130px;
+    bottom: 10px;
 }
