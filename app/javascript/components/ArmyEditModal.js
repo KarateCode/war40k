@@ -56,7 +56,7 @@ const ArmyEditModal = ({army, show, onSaveArmy, onDismiss}) => {
 							checked={point_battle === 500}
 							value='500' />
 						<label htmlFor='point-battle-500' className='point-battle-label'>
-							500 1 Detachment
+							500 1 Detachment (3 Command Points)
 						</label>
 					</div>
 					<div className='radio-group'>
@@ -68,7 +68,7 @@ const ArmyEditModal = ({army, show, onSaveArmy, onDismiss}) => {
 							checked={point_battle === 1000}
 							value='1000' />
 						<label htmlFor='point-battle-1000' className='point-battle-label'>
-							1,000 2 Detachments
+							1,000 2 Detachments (6 Command Points)
 						</label>
 					</div>
 					<div className='radio-group'>
@@ -80,7 +80,7 @@ const ArmyEditModal = ({army, show, onSaveArmy, onDismiss}) => {
 							checked={point_battle === 2000}
 							value='2000' />
 						<label htmlFor='point-battle-2000' className='point-battle-label'>
-							2,000 3 Detachments
+							2,000 3 Detachments (12 Command Points)
 						</label>
 					</div>
 					<div className='radio-group'>
@@ -92,7 +92,7 @@ const ArmyEditModal = ({army, show, onSaveArmy, onDismiss}) => {
 							checked={point_battle === 3000}
 							value='3000' />
 						<label htmlFor='point-battle-3000' className='point-battle-label'>
-							3,000 4 Detachments
+							3,000 4 Detachments (18 Command Points)
 						</label>
 					</div>
 				</div>

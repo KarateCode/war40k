@@ -1,0 +1,2 @@
+class OpenPlay < ApplicationRecord
+end

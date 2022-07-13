@@ -73,13 +73,16 @@ class Army extends React.Component {
 			editDetachment,
 			showAddDetachmentModal,
 		} = this.state
+		const total = _(detachments)
+			.map('points')
+			.sum() || 0
 
 		return (
 			<div className='Detachments'>
 				<header>
 					<span className='left'><a className='btn btn-cancel left' href='/armies'>Back</a></span>
 					<span className='middle'>{army.name}</span>
-					<span className='right'><span className='placeholder'> </span></span>
+					<span className='right'>Total: {total}</span>
 				</header>
 
 				<div className='main-body'>

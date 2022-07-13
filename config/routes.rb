@@ -20,5 +20,10 @@ Rails.application.routes.draw do
 		get '/detachments/:id', to: 'detachments#show'
 		put '/detachments/:id', to: 'detachments#update'
 		post '/detachments', to: 'detachments#create'
+
+		get '/open_plays', to: 'open_plays#index'
+		post '/open_plays', to: 'open_plays#create'
+		put '/open_plays/:id', to: 'open_plays#update'
+		delete 'open_plays/:id', to: 'open_plays#destroy'
 	end
 end

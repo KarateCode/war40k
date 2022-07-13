@@ -193,9 +193,7 @@ class Detachment extends React.Component {
 								<div className='role hq'>
 									<div className='unit-type'>HQ</div>
 									<div className='unit-min-max'>{detachmentDef.hq_min}-{detachmentDef.hq_max}</div>
-									{_.range(detachmentDef.hq_max).map((index) => (
-										<div className='unit-symbol' key={`hq-${index}`}>☠︎</div>
-									))}
+									<div className='unit-symbol'>☠︎</div>
 
 									{_.get(unitsByRole, 'HQ', []).map((unit) => (
 										<div key={`unit-${unit.id}`}
@@ -212,9 +210,7 @@ class Detachment extends React.Component {
 								<div className='role troops'>
 									<div className='unit-type'>TROOPS</div>
 									<div className='unit-min-max'>{detachmentDef.troop_min}-{detachmentDef.troop_max}</div>
-									{_.range(detachmentDef.troop_max).map((index) => (
-										<div className='unit-symbol troops-icon' key={`troop-${index}`}>◁</div>
-									))}
+									<div className='unit-symbol troops-icon'>◁</div>
 
 									{_.get(unitsByRole, 'Troops', []).map((unit) => (
 										<React.Fragment key={`unit-${unit.id}`}>
@@ -241,9 +237,7 @@ class Detachment extends React.Component {
 								<div className='role elites'>
 									<div className='unit-type'>ELITES</div>
 									<div className='unit-min-max'>{detachmentDef.elite_min}-{detachmentDef.elite_max}</div>
-									{_.range(detachmentDef.elite_max).map((index) => (
-										<div className='unit-symbol' key={`elite-${index}`}>✠</div>
-									))}
+									<div className='unit-symbol'>✠</div>
 
 									{_.get(unitsByRole, 'Elites', []).map((unit) => (
 										<div key={`unit-${unit.id}`}
@@ -260,9 +254,7 @@ class Detachment extends React.Component {
 								<div className='role fast-attacks'>
 									<div className='unit-type'>FAST ATTACK</div>
 									<div className='unit-min-max'>{detachmentDef.fast_attack_min}-{detachmentDef.fast_attack_max}</div>
-									{_.range(detachmentDef.fast_attack_max).map((index) => (
-										<div className='unit-symbol' key={`fast-attack-${index}`}>⚡︎</div>
-									))}
+									<div className='unit-symbol'>⚡︎</div>
 
 									{_.get(unitsByRole, 'Fast Attack', []).map((unit) => (
 										<div key={`unit-${unit.id}`}
@@ -279,9 +271,7 @@ class Detachment extends React.Component {
 								<div className='role heavy-supports'>
 									<div className='unit-type'>HEAVY SUPPORT</div>
 									<div className='unit-min-max'>{detachmentDef.heavy_support_min}-{detachmentDef.heavy_support_max}</div>
-									{_.range(detachmentDef.heavy_support_max).map((index) => (
-										<div className='unit-symbol' key={`heavy-support-${index}`}>❋</div>
-									))}
+									<div className='unit-symbol'>❋</div>
 
 									{_.get(unitsByRole, 'Heavy Support', []).map((unit) => (
 										<div key={`unit-${unit.id}`}
@@ -298,11 +288,43 @@ class Detachment extends React.Component {
 								<div className='role flyers'>
 									<div className='unit-type'>FLYERS</div>
 									<div className='unit-min-max'>{detachmentDef.flyer_min}-{detachmentDef.flyer_max}</div>
-									{_.range(detachmentDef.flyer_max).map((index) => (
-										<div className='unit-symbol' key={`flyer-${index}`}>🦋</div>
-									))}
+									<div className='unit-symbol'>🦋</div>
 
 									{_.get(unitsByRole, 'Flyers', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											{unit.name}
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
+									))}
+								</div>
+							)}
+							{(detachmentDef.fortification_max > 0) && (
+								<div className='role fortifications'>
+									<div className='unit-type'>FORTIFICATIONS</div>
+									<div className='unit-min-max'>{detachmentDef.fortification_min}-{detachmentDef.fortification_max}</div>
+									<div className='unit-symbol'>🏰</div>
+
+									{_.get(unitsByRole, 'Fortification', []).map((unit) => (
+										<div key={`unit-${unit.id}`}
+											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+											onClick={this.handleUnitClick(unit)}>
+											{unit.name}
+											<div><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+											<div>{unit.points} V</div>
+										</div>
+									))}
+								</div>
+							)}
+							{(detachmentDef.lord_of_war_max > 0) && (
+								<div className='role lord-of-war'>
+									<div className='unit-type'>LORD OF WAR</div>
+									<div className='unit-min-max'>{detachmentDef.lord_of_war_min}-{detachmentDef.lord_of_war_max}</div>
+									<div className='unit-symbol'>🏰</div>
+
+									{_.get(unitsByRole, 'Lord of War', []).map((unit) => (
 										<div key={`unit-${unit.id}`}
 											className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
 											onClick={this.handleUnitClick(unit)}>
