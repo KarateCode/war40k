@@ -24,6 +24,7 @@ Rails.application.routes.draw do
 		get '/open_plays', to: 'open_plays#index'
 		post '/open_plays', to: 'open_plays#create'
 		put '/open_plays/:id', to: 'open_plays#update'
+		get '/open_plays/:id', to: 'open_plays#show'
 		delete 'open_plays/:id', to: 'open_plays#destroy'
 	end
 end

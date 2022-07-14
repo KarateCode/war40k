@@ -15,11 +15,15 @@ class Api::OpenPlaysController < ApplicationController
         render json: openPlay.to_json
     end
 
+    def show
+        openPlay = OpenPlay.find params[:id]
+        render json: openPlay.to_json
+    end
+
     def destroy
         openPlay = OpenPlay.find params[:id]
         openPlay.destroy
     end
-
 
     private
     def open_play_params

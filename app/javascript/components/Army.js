@@ -80,7 +80,7 @@ class Army extends React.Component {
 		return (
 			<div className='Detachments'>
 				<header>
-					<span className='left'><a className='btn btn-cancel left' href='/armies'>Back</a></span>
+					<span className='left'><a className='btn btn-cancel left' href='/armies'>Dashboard</a></span>
 					<span className='middle'>{army.name}</span>
 					<span className='right'>Total: {total}</span>
 				</header>

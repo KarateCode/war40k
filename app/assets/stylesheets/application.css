@@ -129,7 +129,8 @@ header .middle {
 	background-color: black;
 	color: #8DF57B;
 	border-radius: 5px;
-	border: 0;
+	border-color: gray;
+	border: 1;
 	height: 40px;
 	padding: 10px;
 	padding-left: 15px;

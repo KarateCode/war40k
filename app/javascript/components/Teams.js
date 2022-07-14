@@ -76,10 +76,15 @@ const Teams = () => {
 
 	return (
 		<div className='Teams'>
-			<h1>Open Play</h1>
-			<h2>Here is where you can quickly line up two teams. No detachments. It will show your points total though, so you can see if you are evenly matched.</h2>
+			<header>
+				<span className='left'>
+					<a className='btn btn-cancel left' href='/'>Home</a>
+				</span>
+				<span className='middle'>Open Play</span>
+			</header>
 
 			<div className='main-body'>
+				<h2>Here is where you can quickly line up two teams. No detachments. It will show your points total though, so you can see if you are evenly matched.</h2>
 				<table className='table has-clickable-rows'>
 					<thead>
 						<tr>
