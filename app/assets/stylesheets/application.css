@@ -403,3 +403,12 @@ hr {
 .model-type-name {
 	margin-top: 10px;
 }
+
+.ribbon {
+	position: fixed;
+    background-color: #dddddd;
+    right: 0;
+    padding: 15px;
+    top: 20px;
+    color: green;
+}

@@ -19,6 +19,8 @@ const OpenPlay = () => {
 	const [modelsById, setModelsById] = useState({})
 	const [showVariationModal, setShowVariationModal] = useState(false)
 	const [selectedUnitId, setSelectedUnitId] = useState(false)
+	const [showRibbon, setShowRibbon] = useState(false)
+	const [ribbonText, setRibbonText] = useState(false)
 
 	useEffect(async () => {
 		const response = await axios.get('/api/units.json')
@@ -165,6 +167,14 @@ const OpenPlay = () => {
 		const headers = {headers: {'X-CSRF-Token': token}}
 		const saveGame = Object.assign(game, {teamA: JSON.stringify(unitsCheckedA), teamB: JSON.stringify(unitsCheckedB)})
 		await axios.put(`/api/open_plays/${game.id}.json`, saveGame, headers)
+		displayRibbon('Gamed successfully saved')
+	}
+
+	function displayRibbon(text) {
+		setShowRibbon(true)
+		setRibbonText(text)
+
+		setTimeout(() => {setShowRibbon(false)}, 5000)
 	}
 
 	const unit = _.get(unitsById, [selectedUnitId])
@@ -200,6 +210,10 @@ const OpenPlay = () => {
 				<span className='team'>Team B: {totalB}</span>
 				<button className='btn' onClick={handleSaveGame}>Save</button>
 			</header>
+
+			{showRibbon && (
+				<div className='ribbon'>{ribbonText}</div>
+			)}
 
 			<hr />
 			{unitsById && _.values(unitsById).map((unit) => (
