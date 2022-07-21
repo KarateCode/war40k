@@ -1,13 +1,19 @@
 /* globals document */
+
 import React from 'react'
 const {useEffect, useState} = React;
 import {useParams} from 'react-router-dom';
-
 const _ = require('lodash');
 const axios = require('axios');
 
 const Modal = require('components/Modal');
 const Selectimus = require('components/Selectimus');
+
+function selectOption(selectedPlayVariation, optionA, optionB) {
+	return (selectedPlayVariation === 'A')
+		? optionA
+		: optionB
+}
 
 const OpenPlay = () => {
 	const {id} = useParams();
@@ -36,44 +42,30 @@ const OpenPlay = () => {
 		setGame(game)
 	}, [])
 
-	function handleToggleA(unit) {
+	function toggleUnit(unit, unitsChecked, setUnitsChecked, playerType) {
 		return () => {
-			const modifiedUnitsCheckedA = Object.assign(
+			const modifiedUnitsChecked = Object.assign(
 				{},
-				unitsCheckedA,
+				unitsChecked,
 				{
-					[unit.id]: Object.assign({}, unitsCheckedA[unit.id], {
-						included: !_.get(unitsCheckedA, [unit.id, 'included']),
+					[unit.id]: Object.assign({}, unitsChecked[unit.id], {
+						included: !_.get(unitsChecked, [unit.id, 'included']),
 					}),
 				}
 			)
-			setUnitsCheckedA(modifiedUnitsCheckedA)
+			setUnitsChecked(modifiedUnitsChecked)
 
-			if (unit.variations.length && !_.get(unitsCheckedA, [unit.id, 'included'])) {
-				setSelectedPlayVariation('A')
+			if (unit.variations.length && !_.get(unitsChecked, [unit.id, 'included'])) {
+				setSelectedPlayVariation(playerType)
 				handleShowVariationModal(unit)();
 			}
 		}
 	}
-
+	function handleToggleA(unit) {
+		return toggleUnit(unit, unitsCheckedA, setUnitsCheckedA, 'A')
+	}
 	function handleToggleB(unit) {
-		return () => {
-			const newUnitsCheckedB = Object.assign(
-				{},
-				unitsCheckedB,
-				{
-					[unit.id]: Object.assign({}, unitsCheckedB[unit.id], {
-						included: !_.get(unitsCheckedB, [unit.id, 'included']),
-					}),
-				}
-			)
-			setUnitsCheckedB(newUnitsCheckedB)
-
-			if (unit.variations.length && !_.get(unitsCheckedB, [unit.id, 'included'])) {
-				setSelectedPlayVariation('B')
-				handleShowVariationModal(unit)();
-			}
-		}
+		return toggleUnit(unit, unitsCheckedB, setUnitsCheckedB, 'B')
 	}
 
 	function handleShowVariationModal(unit) {
@@ -93,40 +85,30 @@ const OpenPlay = () => {
 		setShowVariationModal(false)
 	}
 
-	function handleToggleVariationA(variation) {
+	function toggleVariation(variation, unitsChecked, setUnitsChecked) {
 		return () => {
-			const newUnitsCheckedA = Object.assign(
+			const newUnitsChecked = Object.assign(
 				{},
-				unitsCheckedA,
+				unitsChecked,
 				{
-					[variation.unit_id]: Object.assign({}, unitsCheckedA[variation.unit_id], {
+					[variation.unit_id]: Object.assign({}, unitsChecked[variation.unit_id], {
 						variationChosen: variation.id,
 						slots: [], // wipe slots in case they chose some from a different variation
 					}),
 				}
 			)
-			setUnitsCheckedA(newUnitsCheckedA)
+			setUnitsChecked(newUnitsChecked)
 		}
 	}
-
+	function handleToggleVariationA(variation) {
+		return toggleVariation(variation, unitsCheckedA, setUnitsCheckedA)
+	}
 	function handleToggleVariationB(variation) {
-		return () => {
-			const newUnitsCheckedB = Object.assign(
-				{},
-				unitsCheckedB,
-				{
-					[variation.unit_id]: Object.assign({}, unitsCheckedB[variation.unit_id], {
-						variationChosen: variation.id,
-						slots: [], // wipe slots in case they chose some from a different variation
-					}),
-				}
-			)
-			setUnitsCheckedB(newUnitsCheckedB)
-		}
+		return toggleVariation(variation, unitsCheckedB, setUnitsCheckedB)
 	}
 
 	function getSlotOptions(variation, slot) {
-		const chosenModels = _(unitsCheckedA[variation.unit_id].slots)
+		const chosenModels = _(_.get(unitsCheckedA, [variation.unit_id, 'slots']))
 			.values()
 			.map((slot) => _.values(slot))
 			.flatten()
@@ -137,48 +119,29 @@ const OpenPlay = () => {
 		return [{id: undefined, name: '- None -'}, ...availableModels]
 	}
 
-	function handleSlotChangeA(variation, slot, index) {
+	function slotChange(variation, slot, index, unitsChecked, setUnitsChecked) {
 		return (model) => {
-			const newUnitsCheckedA = Object.assign(
+			const newUnitsChecked = Object.assign(
 				{},
-				unitsCheckedA,
+				unitsChecked,
 				{
-					[variation.unit_id]: Object.assign({}, unitsCheckedA[variation.unit_id], {
+					[variation.unit_id]: Object.assign({}, unitsChecked[variation.unit_id], {
 						variationChosen: variation.id,
-						slots: Object.assign({}, unitsCheckedA[variation.unit_id].slots, {
-							[slot.id]: Object.assign({}, unitsCheckedA[variation.unit_id].slots[slot.id], {[index]: model.id}),
+						slots: Object.assign({}, unitsChecked[variation.unit_id].slots, {
+							[slot.id]: Object.assign({}, unitsChecked[variation.unit_id].slots[slot.id], {[index]: model.id}),
 						}),
 					}),
 				}
 			)
 
-			setUnitsCheckedA(newUnitsCheckedA)
+			setUnitsChecked(newUnitsChecked)
 		}
 	}
-
+	function handleSlotChangeA(variation, slot, index) {
+		return slotChange(variation, slot, index, unitsCheckedA, setUnitsCheckedA)
+	}
 	function handleSlotChangeB(variation, slot, index) {
-		return (model) => {
-			const slotsB = unitsCheckedB[variation.unit_id].slots
-
-			const newUnitsCheckedB = Object.assign(
-				{},
-				unitsCheckedB,
-				{
-					[variation.unit_id]: Object.assign({}, unitsCheckedB[variation.unit_id], {
-						variationChosen: variation.id,
-						slots: Object.assign(
-							{}, // create new Object
-							slotsB, // put all the old back
-							{ // but make the new modification
-								[slot.id]: Object.assign({}, slotsB[slot.id], {[index]: model.id}),
-							}
-						),
-					}),
-				}
-			)
-
-			setUnitsCheckedB(newUnitsCheckedB)
-		}
+		return slotChange(variation, slot, index, unitsCheckedB, setUnitsCheckedB)
 	}
 
 	function getModelChoice(variation, slot, index) {
@@ -188,58 +151,43 @@ const OpenPlay = () => {
 		return model
 	}
 
+	function slotPoints(variation, slot, index, unitsChecked) {
+		const modelId = _.get(unitsChecked, [variation.unit_id, 'slots', slot.id, index]);
+		const modelType = slot.model_type
+		const model = _.find(modelsByType[modelType], {id: modelId});
+		return (model)
+			? model.points
+			: null;
+	}
 	function getSlotPointsA(variation, slot, index) {
-		const modelId = _.get(unitsCheckedA, [variation.unit_id, 'slots', slot.id, index]);
-		const modelType = slot.model_type
-		const model = _.find(modelsByType[modelType], {id: modelId});
-		return (model)
-			? model.points
-			: null;
+		return slotPoints(variation, slot, index, unitsCheckedA)
 	}
-
 	function getSlotPointsB(variation, slot, index) {
-		const modelId = _.get(unitsCheckedB, [variation.unit_id, 'slots', slot.id, index]);
-		const modelType = slot.model_type
-		const model = _.find(modelsByType[modelType], {id: modelId});
-		return (model)
-			? model.points
-			: null;
+		return slotPoints(variation, slot, index, unitsCheckedB)
 	}
 
+	function removeModel(variation, slot, index, unitsChecked, setUnitsChecked) {
+		return (model) => {
+			const newUnitsChecked = Object.assign(
+				{},
+				unitsChecked,
+				{
+					[variation.unit_id]: Object.assign({}, unitsChecked[variation.unit_id], {
+						variationChosen: variation.id,
+						slots: Object.assign({}, unitsChecked[variation.unit_id].slots, {
+							[slot.id]: Object.assign({}, unitsChecked[variation.unit_id].slots[slot.id], {[index]: undefined}),
+						}),
+					}),
+				}
+			)
+			setUnitsChecked(newUnitsChecked)
+		}
+	}
 	function handleRemoveModelA(variation, slot, index) {
-		return (model) => {
-			const newUnitsCheckedA = Object.assign(
-				{},
-				unitsCheckedA,
-				{
-					[variation.unit_id]: Object.assign({}, unitsCheckedA[variation.unit_id], {
-						variationChosen: variation.id,
-						slots: Object.assign({}, unitsCheckedA[variation.unit_id].slots, {
-							[slot.id]: Object.assign({}, unitsCheckedA[variation.unit_id].slots[slot.id], {[index]: undefined}),
-						}),
-					}),
-				}
-			)
-			setUnitsCheckedA(newUnitsCheckedA)
-		}
+		return removeModel(variation, slot, index, unitsCheckedA, setUnitsCheckedA);
 	}
-
 	function handleRemoveModelB(variation, slot, index) {
-		return (model) => {
-			const newUnitsCheckedB = Object.assign(
-				{},
-				unitsCheckedB,
-				{
-					[variation.unit_id]: Object.assign({}, unitsCheckedB[variation.unit_id], {
-						variationChosen: variation.id,
-						slots: Object.assign({}, unitsCheckedB[variation.unit_id].slots, {
-							[slot.id]: Object.assign({}, unitsCheckedB[variation.unit_id].slots[slot.id], {[index]: undefined}),
-						}),
-					}),
-				}
-			)
-			setUnitsCheckedB(newUnitsCheckedB)
-		}
+		return removeModel(variation, slot, index, unitsCheckedB, setUnitsCheckedB);
 	}
 
 	async function handleSaveGame() {
@@ -257,54 +205,35 @@ const OpenPlay = () => {
 		setTimeout(() => {setShowRibbon(false)}, 5000)
 	}
 
+	function totalPlayerPoints(unitsChecked) {
+		const unitPoints = _(unitsChecked)
+			.toPairs()
+			.filter((pair) => pair[1].included)
+			.map((pair) => unitsById[pair[0]].points)
+			.sum()
+		const variationPoints = _(unitsChecked)
+			.toPairs()
+			.filter((pair) => pair[1].included)
+			.map((pair) => _.values(pair[1].slots))
+			.compact()
+			.flatten()
+			.map((slotEntry) => _.values(slotEntry))
+			.flatten()
+			.map((modelId) => _.get(modelsById, [modelId, 'points'], 0))
+			.sum()
+
+		return unitPoints + variationPoints
+	}
+
 	const unit = _.get(unitsById, [selectedUnitId])
-	const unitPointsA = _(unitsCheckedA)
-		.toPairs()
-		.filter((pair) => pair[1].included)
-		.map((pair) => unitsById[pair[0]].points)
-		.sum()
-	const unitPointsB = _(unitsCheckedB)
-		.toPairs()
-		.filter((pair) => pair[1].included)
-		.map((pair) => unitsById[pair[0]].points)
-		.sum()
-	const variationPointsA = _(unitsCheckedA)
-		.toPairs()
-		.filter((pair) => pair[1].included)
-		.map((pair) => _.values(pair[1].slots))
-		.compact()
-		.flatten()
-		.map((slotEntry) => _.values(slotEntry))
-		.flatten()
-		.map((modelId) => _.get(modelsById, [modelId, 'points'], 0))
-		.sum()
-	const variationPointsB = _(unitsCheckedB)
-		.toPairs()
-		.filter((pair) => pair[1].included)
-		.map((pair) => _.values(pair[1].slots))
-		.compact()
-		.flatten()
-		.map((slotEntry) => _.values(slotEntry))
-		.flatten()
-		.map((modelId) => _.get(modelsById, [modelId, 'points'], 0))
-		.sum()
-	const totalA = unitPointsA + variationPointsA
-	const totalB = unitPointsB + variationPointsB
-	const unitsChecked = (selectedPlayVariation === 'A')
-		? unitsCheckedA
-		: unitsCheckedB
-	const handleToggleVariation = (selectedPlayVariation === 'A')
-		? handleToggleVariationA
-		: handleToggleVariationB
-	const handleSlotChange = (selectedPlayVariation === 'A')
-		? handleSlotChangeA
-		: handleSlotChangeB
-	const getSlotPoints = (selectedPlayVariation === 'A')
-		? getSlotPointsA
-		: getSlotPointsB
-	const handleRemoveModel = (selectedPlayVariation === 'A')
-		? handleRemoveModelA
-		: handleRemoveModelB
+	const totalA = totalPlayerPoints(unitsCheckedA)
+	const totalB = totalPlayerPoints(unitsCheckedB)
+
+	const unitsChecked = selectOption(selectedPlayVariation, unitsCheckedA, unitsCheckedB)
+	const handleToggleVariation = selectOption(selectedPlayVariation, handleToggleVariationA, handleToggleVariationB)
+	const handleSlotChange = selectOption(selectedPlayVariation, handleSlotChangeA, handleSlotChangeB)
+	const getSlotPoints = selectOption(selectedPlayVariation, getSlotPointsA, getSlotPointsB)
+	const handleRemoveModel = selectOption(selectedPlayVariation, handleRemoveModelA, handleRemoveModelB)
 
 	return (
 		<div className='OpenPlay'>
