@@ -404,11 +404,38 @@ hr {
 	margin-top: 10px;
 }
 
-.ribbon {
+.ribbon-enter {
+	position: fixed;
+    background-color: #dddddd;
+    right: 0;
+    padding: 15px;
+    top: -50px;
+    color: green;
+}
+.ribbon-enter-done,
+.ribbon-enter-active {
 	position: fixed;
     background-color: #dddddd;
     right: 0;
     padding: 15px;
     top: 20px;
     color: green;
+	transition: all 400ms;
+}
+.ribbon-exit {
+	position: fixed;
+    background-color: #dddddd;
+    right: 0;
+    padding: 15px;
+    top: 0px;
+    color: green;
+}
+.ribbon-exit-active {
+	position: fixed;
+    background-color: #dddddd;
+    right: 0;
+    padding: 15px;
+    top: -50px;
+    color: green;
+	transition: all 400ms;
 }

@@ -5,6 +5,7 @@ const {useEffect, useState} = React;
 import {useParams} from 'react-router-dom';
 const _ = require('lodash');
 const axios = require('axios');
+const {CSSTransition} = require('react-transition-group');
 
 const Modal = require('components/Modal');
 const Selectimus = require('components/Selectimus');
@@ -195,12 +196,12 @@ const OpenPlay = () => {
 		const headers = {headers: {'X-CSRF-Token': token}}
 		const saveGame = Object.assign(game, {teamA: JSON.stringify(unitsCheckedA), teamB: JSON.stringify(unitsCheckedB)})
 		await axios.put(`/api/open_plays/${game.id}.json`, saveGame, headers)
-		displayRibbon('Gamed successfully saved')
+		displayRibbon('Game successfully saved')
 	}
 
 	function displayRibbon(text) {
-		setShowRibbon(true)
 		setRibbonText(text)
+		setShowRibbon(true)
 
 		setTimeout(() => {setShowRibbon(false)}, 5000)
 	}
@@ -246,9 +247,15 @@ const OpenPlay = () => {
 				<button className='btn' onClick={handleSaveGame}>Save</button>
 			</header>
 
-			{showRibbon && (
-				<div className='ribbon'>{ribbonText}</div>
-			)}
+			<CSSTransition
+				in={showRibbon}
+				timeout={400}
+				classNames='ribbon'
+				unmountOnExit
+				appear>
+
+				<div>{ribbonText}</div>
+			</CSSTransition>
 
 			<hr />
 			{unitsById && _.values(unitsById).map((unit) => (
