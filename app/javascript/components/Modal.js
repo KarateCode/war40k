@@ -2,13 +2,14 @@
 
 const _ = require('lodash');
 const PropTypes = require('prop-types');
+const {CSSTransition} = require('react-transition-group');
 
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 
 const bindReactClass = require('lib/bind-react-class');
 const React = require('react');
 const ReactDOM = require('react-dom');
-const classNames = require('classnames');
+// const classNames = require('classnames');
 // const {bindActionCreators} = require('redux');
 // const {CSSTransitionGroup} = require('react-transition-group');
 const {bool, func, string} = PropTypes;
@@ -20,10 +21,10 @@ const propTypes = {
 		PropTypes.arrayOf(PropTypes.node),
 		PropTypes.node,
 	]),
-	className: string,
+	// className: string,
 	// dismissable: bool,
 	hasCloseEx: bool,
-	hasBody: bool,
+	// hasBody: bool,
 	headerText: string,
 	modalType: string,
 	onDismiss: func,
@@ -33,8 +34,8 @@ const propTypes = {
 };
 const defaultProps = {
 	children: undefined,
-	className: undefined,
-	hasBody: true,
+	// className: undefined,
+	// hasBody: true,
 	hasCloseEx: false,
 	modalType: 'DEFAULT',
 	// dismissable: false,
@@ -109,12 +110,9 @@ class Modal extends React.Component {
 
 	render() {
 		const {
-			className,
-			hasBody,
 			headerText,
 			show,
 			hasCloseEx,
-			modalType,
 		} = this.props;
 
 		let closeEl;
@@ -136,55 +134,33 @@ class Modal extends React.Component {
 			);
 		}
 
-		const topClasses = classNames(
-			'awt-modal',
-			'awt-modal-react',
-			className,
-			{
-				'is-colorless': modalType === 'COLORLESS',
-				'warning': modalType === 'WARNING',
-			}
-		);
-
-		let modalEl;
-		if (show) {
-			modalEl = (
-				<div className={topClasses} key={1}>
+		return (
+			<CSSTransition
+				in={show}
+				timeout={500}
+				classNames='awt-modal-react'
+				unmountOnExit
+				appear>
+				<div>
 					<div className='modal-backdrop' />
 					<div onMouseDown={this.handleClickOff}
 						onKeyDown={this.handleKeyDown}
 						tabIndex={0}
 						role='Button'
 						className='modal'>
+
 						<div className='modal-dialog'>
-							{hasBody && (
-								<div className='modal-content clearfix'>
-									{headerEl}
-									<div className='modal-content__body'>
-										{this.props.children}
-									</div>
+							<div className='modal-content clearfix'>
+								{headerEl}
+								<div className='modal-content__body'>
+									{this.props.children}
 								</div>
-							)}
-							{!hasBody && this.props.children}
+							</div>
 						</div>
 					</div>
 				</div>
-			);
-		} else {
-			return null;
-		}
-
-		// const returnElem = (
-		//     this.handlePortal(
-		//         <CSSTransitionGroup
-		//             transitionName='ani'
-		//             transitionEnterTimeout={250}
-		//             transitionLeaveTimeout={250}>
-		//             {modalEl}
-		//         </CSSTransitionGroup>
-		//     )
-		// );
-		return modalEl;
+			</CSSTransition>
+		);
 	}
 }
 

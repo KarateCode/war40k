@@ -249,7 +249,7 @@ const OpenPlay = () => {
 
 			<CSSTransition
 				in={showRibbon}
-				timeout={400}
+				timeout={300}
 				classNames='ribbon'
 				unmountOnExit
 				appear>

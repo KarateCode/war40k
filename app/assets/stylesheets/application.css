@@ -298,16 +298,6 @@ hr {
 	margin-left: 30px;
 }
 
-.awt-modal-react .modal-backdrop {
-    background-color: #000;
-    bottom: 0;
-    left: 0;
-    opacity: 0.5;
-    position: fixed;
-    right: 0;
-    top: 0;
-}
-
 .modal {
     position: fixed;
     bottom: 0;
@@ -336,10 +326,51 @@ hr {
 	padding-right: 30px;
 }
 
-.modal-dialog {
+.awt-modal-react-enter .modal-backdrop {
+    background-color: #000;
+    bottom: 0;
+    left: 0;
+    opacity: 0.0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+.awt-modal-react-enter-active .modal-backdrop,
+.awt-modal-react-enter-done .modal-backdrop {
+    background-color: #000;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    right: 0;
+    top: 0;
+	transition: all 300ms;
+}
+.awt-modal-react-exit .modal-backdrop {
+    background-color: #000;
+    bottom: 0;
+    left: 0;
+    opacity: 0.5;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+.awt-modal-react-exit-active .modal-backdrop {
+    background-color: #000;
+    bottom: 0;
+    left: 0;
+    opacity: 0.0;
+    position: fixed;
+    right: 0;
+    top: 0;
+	transition: all 300ms;
+}
+
+.awt-modal-react-enter .modal-dialog {
 	box-shadow: 3px 3px 5px 6px teal;
 	position: relative;
 	width: 600px;
+	top: -100px;
 	background-color: white;
 	margin-left: auto;
 	margin-right: auto;
@@ -348,6 +379,55 @@ hr {
 	padding-top: 0;
 	padding-bottom: 30px;
 	border-radius: 10px;
+	opacity: 0.1;
+}
+.awt-modal-react-enter-active .modal-dialog,
+.awt-modal-react-enter-done .modal-dialog {
+	box-shadow: 3px 3px 5px 6px teal;
+	position: relative;
+	width: 600px;
+	top: 0px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
+	margin-bottom: 50px;
+	padding-top: 0;
+	padding-bottom: 30px;
+	border-radius: 10px;
+	opacity: 1.0;
+	transition: all 300ms;
+}
+.awt-modal-react-exit .modal-dialog {
+	box-shadow: 3px 3px 5px 6px teal;
+	position: relative;
+	width: 600px;
+	top: 0px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
+	margin-bottom: 50px;
+	padding-top: 0;
+	padding-bottom: 30px;
+	border-radius: 10px;
+	opacity: 1.0;
+}
+.awt-modal-react-exit-active .modal-dialog {
+	box-shadow: 3px 3px 5px 6px teal;
+	position: relative;
+	width: 600px;
+	top: -400px;
+	background-color: white;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 100px;
+	margin-bottom: 50px;
+	padding-top: 0;
+	padding-bottom: 30px;
+	border-radius: 10px;
+	opacity: 0.0;
+	transition: all 300ms;
 }
 
 .slot .Selectimus {
@@ -420,7 +500,7 @@ hr {
     padding: 15px;
     top: 20px;
     color: green;
-	transition: all 400ms;
+	transition: all 300ms;
 }
 .ribbon-exit {
 	position: fixed;
@@ -437,5 +517,5 @@ hr {
     padding: 15px;
     top: -50px;
     color: green;
-	transition: all 400ms;
+	transition: all 300ms;
 }
