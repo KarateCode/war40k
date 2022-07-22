@@ -6,7 +6,7 @@ class Home extends React.Component {
 			<div className='Home'>
 				<h1>Warhammer 40,000</h1>
 				<menu>
-					<li><a href='/teams'>Open Play</a></li>
+					<li><a href='/open_plays'>Open Play</a></li>
 					<li><a href='/armies'>Armies</a></li>
 				</menu>
 			</div>

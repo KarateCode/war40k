@@ -98,7 +98,7 @@ const Teams = () => {
 							<tr key={`army-${team.id}`}>
 								<td className='icon-field edit'><a onClick={handleEditOpenPlay(team)}>✎</a></td>
 								<td className='icon-field delete'><a onClick={handleShowDeleteModal(team)}>✗</a></td>
-								<td className='link-field'><a href={`/teams/${team.id}`}>{team.name}</a></td>
+								<td className='link-field'><a href={`/open_plays/${team.id}`}>{team.name}</a></td>
 							</tr>
 						))}
 					</tbody>

@@ -240,7 +240,7 @@ const OpenPlay = () => {
 		<div className='OpenPlay'>
 			<header>
 				<span className='left'>
-					<a className='btn btn-cancel left' href='/teams'>Dashboard</a>
+					<a className='btn btn-cancel left' href='/open_plays'>Dashboard</a>
 				</span>
 				<span className='team'>Team A: {totalA}</span>
 				<span className='team'>Team B: {totalB}</span>
