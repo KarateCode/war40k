@@ -1,6 +1,8 @@
 @import "detachment.css";
 @import "home.css";
 @import "armies.css";
+@import "open_play_print.css";
+@import "open_play.css";
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -52,29 +54,12 @@ header .middle {
     width: 100%;
     border-spacing: 0;
     margin-bottom: 30px;
-
-    .number-th,
-    .currency-th,
-    .number-td,
-    .currency-td {
-        text-align: right;
-    }
 }
 
 .table thead th {
     border-bottom: 2px solid #e6e6e6;
     padding: 10px;
     padding: 0;
-
-    .sort-field-indicators .border-color-branded {
-        border-right-color: transparent;
-        border-left-color: transparent;
-    }
-
-/*    &.dragHandle-th {
-        width: 30px;
-    }
-*/
 }
 .table thead th {
     padding: 10px;
@@ -95,12 +80,6 @@ header .middle {
     line-height: 30px;
     vertical-align: middle;
     padding: 10px;
-
-    .btn {
-        height: 30px;
-        line-height: 30px;
-    }
-
 }
 .table tbody .link-field {
     padding: 0;
@@ -130,7 +109,7 @@ header .middle {
 	color: #8DF57B;
 	border-radius: 5px;
 	border-color: gray;
-	border: 1;
+	border: 1px solid gray;
 	height: 40px;
 	padding: 10px;
 	padding-left: 15px;

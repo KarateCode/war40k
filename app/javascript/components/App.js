@@ -2,11 +2,12 @@ import React from 'react'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import TeamBuilder from './TeamBuilder'
 import OpenPlays from './OpenPlays'
+import OpenPlay from './OpenPlay'
+import OpenPlayPrint from './OpenPlayPrint'
 import Armies from './Armies'
 import Army from './Army'
 import Detachment from './Detachment'
 import Home from './Home'
-import OpenPlay from './OpenPlay'
 
 class App extends React.Component {
 	render () {
@@ -15,6 +16,7 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path='/' component={Home} />
 					<Route path='/team' component={TeamBuilder} />
+					<Route path='/open_plays/:id/print' component={OpenPlayPrint} />
 					<Route path='/open_plays/:id' component={OpenPlay} />
 					<Route path='/open_plays' component={OpenPlays} />
 					<Route path='/armies/:id' component={Army} />

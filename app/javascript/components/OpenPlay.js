@@ -244,6 +244,7 @@ const OpenPlay = () => {
 				</span>
 				<span className='team'>Team A: {totalA}</span>
 				<span className='team'>Team B: {totalB}</span>
+				<a className='btn print' target='_blank' rel='noreferrer' href={`/open_plays/${game.id}/print`}>Print</a>
 				<button className='btn' onClick={handleSaveGame}>Save</button>
 			</header>
 
