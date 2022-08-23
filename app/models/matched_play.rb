@@ -1,0 +1,2 @@
+class MatchedPlay < ApplicationRecord
+end

@@ -8,6 +8,7 @@ class Home extends React.Component {
 				<menu>
 					<li><a href='/open_plays'>Open Play</a></li>
 					<li><a href='/armies'>Armies</a></li>
+					<li><a href='/matched_plays'>Matched Play</a></li>
 				</menu>
 			</div>
 		);

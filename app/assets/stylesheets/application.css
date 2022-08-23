@@ -3,6 +3,7 @@
 @import "armies.css";
 @import "open_play_print.css";
 @import "open_play.css";
+@import "matched_play_details.css";
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.

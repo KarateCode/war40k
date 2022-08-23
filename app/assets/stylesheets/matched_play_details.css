@@ -1,0 +1,10 @@
+.matched_play_details {
+    display: flex;
+    flex-direction: row;
+    column-gap: 30px;
+    margin: 30px;
+}
+
+.matched_play_details .matched_player_pane {
+    flex-grow: 1;
+}

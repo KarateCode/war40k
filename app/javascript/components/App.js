@@ -1,6 +1,8 @@
 import React from 'react'
 import {BrowserRouter, Switch, Route} from 'react-router-dom'
 import TeamBuilder from './TeamBuilder'
+import MatchedPlays from './MatchedPlays'
+import MatchedPlayDetails from './MatchedPlayDetails'
 import OpenPlays from './OpenPlays'
 import OpenPlay from './OpenPlay'
 import OpenPlayPrint from './OpenPlayPrint'
@@ -16,6 +18,8 @@ class App extends React.Component {
 				<Switch>
 					<Route exact path='/' component={Home} />
 					<Route path='/team' component={TeamBuilder} />
+					<Route path='/matched_plays/:id' component={MatchedPlayDetails} />
+					<Route path='/matched_plays' component={MatchedPlays} />
 					<Route path='/open_plays/:id/print' component={OpenPlayPrint} />
 					<Route path='/open_plays/:id' component={OpenPlay} />
 					<Route path='/open_plays' component={OpenPlays} />

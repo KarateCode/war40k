@@ -10,12 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_29_125747) do
+ActiveRecord::Schema.define(version: 2022_07_27_130653) do
 
   create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
     t.integer "point_battle"
     t.integer "command_points"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "detachment_abilities", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "lore"
+    t.text "desc"
+    t.string "faction"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -73,6 +82,29 @@ ActiveRecord::Schema.define(version: 2022_06_29_125747) do
     t.integer "points"
   end
 
+  create_table "matched_plays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "notes"
+    t.string "faction_a"
+    t.string "faction_b"
+    t.integer "detachment_id_a"
+    t.integer "detachment_id_b"
+    t.integer "warlord_trait_id_a1"
+    t.integer "warlord_trait_id_a2"
+    t.integer "warlord_trait_id_b1"
+    t.integer "warlord_trait_id_b2"
+    t.integer "relic_id_a1"
+    t.integer "relic_id_a2"
+    t.integer "relic_id_b1"
+    t.integer "relic_id_b2"
+    t.integer "detachment_ability_id_a"
+    t.integer "detachment_ability_id_b"
+    t.integer "secondary_objective_id_a"
+    t.integer "secondary_objective_id_b"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "models", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "type"
     t.string "name"
@@ -86,6 +118,24 @@ ActiveRecord::Schema.define(version: 2022_06_29_125747) do
     t.text "desc"
     t.json "teamA"
     t.json "teamB"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "relics", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "lore"
+    t.text "desc"
+    t.string "faction"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "secondary_objectives", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "lore"
+    t.text "desc"
+    t.string "faction"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
@@ -119,6 +169,15 @@ ActiveRecord::Schema.define(version: 2022_06_29_125747) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "unit_variation_id"
+  end
+
+  create_table "warlord_traits", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "name"
+    t.text "lore"
+    t.text "desc"
+    t.string "faction"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
 end
