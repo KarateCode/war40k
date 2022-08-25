@@ -6,8 +6,7 @@ class Unit < ApplicationRecord
 	has_many :unit_variations
 
 	def as_json(options)
-		# super(include: 'variations')
-		self.keyword_array = (self.keywords || []).split(',').each(&:strip)
+		self.keyword_array = (self.keywords || []).split(',').each(&:strip!)
 		self.attributes.merge({variations: self.unit_variations, keyword_array: self.keyword_array})
 	end
 end

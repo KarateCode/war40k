@@ -2,6 +2,7 @@
 import React from 'react'
 const _ = require('lodash');
 const axios = require('axios');
+import {withRouter} from 'react-router-dom';
 
 const bindReactClass = require('lib/bind-react-class');
 const Selectimus = require('components/Selectimus');
@@ -39,6 +40,7 @@ class Detachment extends React.Component {
 			.filter('keywords')
 			.map('keyword_array')
 			.flatten()
+			.map((keyword) => keyword.trim())
 			.uniq()
 			.map((keyword) => ({key: keyword, value: keyword}))
 			.value()
@@ -50,10 +52,24 @@ class Detachment extends React.Component {
 		const models = response4.data;
 		const modelsById = _.keyBy(models, 'id')
 
-		this.setState({units, keywords, unitsByRole, unitsById, modelsById})
+		this.setState({units, keywords, unitsByRole, unitsById, modelsById}, () => {
+			const params = new URLSearchParams(this.props.location.search);
+			const keys = _.compact((params.get('keywords') || '').split(','));
+			const selectedKeywords = _.map(keys, (keyword) => ({key: keyword, value: keyword}))
+			if (selectedKeywords.length > 0) {
+				this.handleKeywordChange(selectedKeywords)
+			}
+		})
 	}
 
 	handleKeywordChange(selectedKeywords) {
+		const {history} = this.props
+		const keywords = _.map(selectedKeywords, 'key')
+		history.push({
+			pathname: this.props.location.pathname,
+			search: new URLSearchParams({keywords}).toString(),
+		})
+
 		const {units} = this.state
 		const filterKeywords = _.map(selectedKeywords, 'value')
 		const filterFunc = (unit) => {
@@ -65,7 +81,7 @@ class Detachment extends React.Component {
 			.groupBy('battlefield_role')
 			.value()
 
-		this.setState({unitsByRole})
+		this.setState({unitsByRole, selectedKeywords})
 	}
 
 	handleUnitClick(unit) {
@@ -138,7 +154,7 @@ class Detachment extends React.Component {
 
 	render () {
 		const {
-			detachment, detachmentDefById, keywords, selectedUnit, unitsByRole,
+			detachment, detachmentDefById, keywords, selectedUnit, selectedKeywords, unitsByRole,
 		} = this.state
 
 		const detachmentDef = (detachment.detachment_def_id)
@@ -184,6 +200,7 @@ class Detachment extends React.Component {
 									multiple={true}
 									labelKey='key'
 									valueKey='value'
+									value={selectedKeywords}
 									options={keywords} />
 							</div>
 						</div>
@@ -350,4 +367,4 @@ class Detachment extends React.Component {
 	}
 }
 
-export default bindReactClass(Detachment)
+export default withRouter(bindReactClass(Detachment))
