@@ -34,8 +34,10 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 			.map('model_id')
 			.value()
 
-		const allModels = _.get(modelsByType, [slotDef.model_type], [])
-		const availableModels = allModels.filter((model) => !_.includes(chosenModels, model.id))
+		const availableModels = _(_.get(modelsByType, [slotDef.model_type], []))
+			.filter((model) => !_.includes(chosenModels, model.id))
+			.uniqBy('name')
+			.value()
 
 		return [...availableModels]
 	}
@@ -117,7 +119,7 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 					{(variationId === variation.id) &&
 						_.get(variation, 'slots', []).map((slot) => (
 							<div key={`slot-${slot.id}`} className='slot'>
-								<div className='model-type-name'>{slot.model_type}</div>
+								<div className='model-type-name'>{slot.name || slot.model_type}</div>
 								{_.range(slot.number_of_models).map((index) => (
 									<div key={`slot-${slot.id}-${index}`}>
 										<Selectimus

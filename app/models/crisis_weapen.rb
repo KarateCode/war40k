@@ -1,0 +1,2 @@
+class CrisisWeapen < Model
+end

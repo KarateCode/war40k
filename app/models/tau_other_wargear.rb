@@ -1,0 +1,2 @@
+class TauOtherWargear < Model
+end

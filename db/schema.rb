@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_27_130653) do
+ActiveRecord::Schema.define(version: 2022_08_26_020641) do
 
   create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -111,6 +111,8 @@ ActiveRecord::Schema.define(version: 2022_07_27_130653) do
     t.integer "points"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "second_points"
+    t.integer "third_points"
   end
 
   create_table "open_plays", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
@@ -164,6 +166,7 @@ ActiveRecord::Schema.define(version: 2022_07_27_130653) do
 
   create_table "variation_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "model_type"
+    t.string "name"
     t.integer "number_of_models"
     t.boolean "upTo"
     t.datetime "created_at", precision: 6, null: false
