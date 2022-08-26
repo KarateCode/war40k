@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_08_26_020641) do
+ActiveRecord::Schema.define(version: 2022_08_26_123841) do
 
   create_table "armies", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
     t.string "name"
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 2022_08_26_020641) do
     t.text "desc"
     t.string "keywords"
     t.string "battlefield_role"
+    t.string "datasheet_link"
   end
 
   create_table "variation_slots", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

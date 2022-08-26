@@ -5,6 +5,13 @@
     font-family: 'Orbitron', sans-serif;
 }
 
+.Detachment .datasheet-link {
+    color: green;
+    text-decoration: none;
+}
+.Detachment .datasheet-link:hover {
+    color: rgb(70, 251, 70);
+}
 .Detachment .title {
     font-size: 24px;
     display: flex;
