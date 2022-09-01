@@ -18,8 +18,7 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 			const models = response.data;
 			const modelsByType = _.groupBy(models, 'type')
 			const modelsById = _.keyBy(models, 'id')
-			console.log('modelsById:');
-			console.log(require('util').inspect(modelsById, false, null));
+
 			setModelsById(modelsById)
 			setModelsByType(modelsByType)
 		}
@@ -62,7 +61,7 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 				slots.push({
 					slot_def_id: slotDef.id,
 					detachment_unit_id: passedDetachmentUnit.id,
-					model_type: 'TacticalDrone',
+					model_type: slotDef.model_type,
 					models: [{index, model_id: model.id}],
 				})
 				setSlots([...slots])
@@ -76,8 +75,6 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 		const slot = _.find(slots, {slot_def_id: slotDef.id})
 		const row = _.find(_.get(slot, 'models'), {index})
 		// ^^ can I combine these into one lodash chain?
-		// here's slot: slot
-		// how do I get all choices per slot?
 
 		const choice = _.find(allModels, {id: _.get(row, 'model_id')})
 		return choice || null

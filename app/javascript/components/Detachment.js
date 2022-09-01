@@ -16,7 +16,8 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 	const [keywords, setKeywords] = useState([])
 	const [unitsByRole, setUnitsByRole] = useState([])
 	const [unitsById, setUnitsById] = useState([])
-	const [modelsById, setModelsById] = useState([])
+	const [modelsById, setModelsById] = useState()
+	const [modelsByType, setModelsByType] = useState(passedDetachmentUnit || {})
 	const [selectedKeywords, setSelectedKeywords] = useState([])
 	const [selectedUnit, setSelectedUnit] = useState()
 
@@ -54,6 +55,8 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 
 		const response4 = await axios.get(`/api/units/all-models.json`)
 		const models = response4.data;
+		const modelsByType = _.groupBy(models, 'type')
+		setModelsByType(modelsByType)
 		const modelsById = _.keyBy(models, 'id')
 		setModelsById(modelsById)
 
@@ -136,6 +139,39 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 		}
 	}
 
+	function variationPoints(slot) {
+		const allModels = _.get(modelsByType, [slot.model_type], [])
+		if (!modelsById) {return}
+
+		let variationTotal = 0
+		for (const {index} of slot.models) {
+			const row = _.find(_.get(slot, 'models'), {index})
+			const model = _.find(allModels, {id: _.get(row, 'model_id')})
+
+			// For Tau, return if this is the first, second, or third instance of this being added to a model
+			if (index === 0) {
+				variationTotal += _.get(model, 'points')
+			} else {
+				const modelName = modelsById[row.model_id].name
+				let modelTypeCount = 0
+				for (const i of _.range(index, -1, -1)) {
+					const modelId = slot.models[i].model_id
+					if (modelName === modelsById[modelId].name) {
+						modelTypeCount++
+					}
+				}
+
+				if (modelTypeCount === 1) {
+					variationTotal += _.get(model, 'points')
+				} else if (modelTypeCount === 2) {
+					variationTotal += _.get(model, 'second_points') || _.get(model, 'points')
+				} else if (modelTypeCount > 2) {
+					variationTotal += _.get(model, 'third_points') || _.get(model, 'second_points') || _.get(model, 'points')
+				}
+			}
+		}
+		return variationTotal
+	}
 	function totalPoints() {
 		const unitTotal = _(detachment.detachment_units)
 			.map('unit_id')
@@ -145,9 +181,8 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 			.filter('detachment_unit_slots.length')
 			.map('detachment_unit_slots')
 			.flatten()
-			.map('models')
-			.flatten()
-			.map(({model_id}) => _.get(modelsById, [model_id, 'points']))
+			.map((variation) => variationPoints(variation))
+			.compact()
 			.sum()
 
 		return unitTotal + variationTotal
