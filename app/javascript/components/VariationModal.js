@@ -8,22 +8,27 @@ const Selectimus = require('components/Selectimus');
 
 const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss, onSubmit}) => {
 	const [variationId, handleVariationIdChange] = useState(_.get(passedDetachmentUnit, 'variation_id') || {})
-	const [modelsByType, handleModelsByTypeChange] = useState(passedDetachmentUnit || {})
-	const [slots, handleSlotsChange] = useState(_.get(passedDetachmentUnit, 'detachment_unit_slots', []))
+	const [modelsByType, setModelsByType] = useState(passedDetachmentUnit || {})
+	const [modelsById, setModelsById] = useState()
+	const [slots, setSlots] = useState(_.get(passedDetachmentUnit, 'detachment_unit_slots', []))
 
 	useEffect(async () => {
 		if (unit) {
 			const response = await axios.get(`/api/units/${unit.id}/variation-models.json`)
 			const models = response.data;
 			const modelsByType = _.groupBy(models, 'type')
-			handleModelsByTypeChange(modelsByType)
+			const modelsById = _.keyBy(models, 'id')
+			console.log('modelsById:');
+			console.log(require('util').inspect(modelsById, false, null));
+			setModelsById(modelsById)
+			setModelsByType(modelsByType)
 		}
 	}, [unit])
 
 	useEffect(async () => {
 		if (passedDetachmentUnit) {
 			handleVariationIdChange(passedDetachmentUnit.variation_id)
-			handleSlotsChange(passedDetachmentUnit.detachment_unit_slots)
+			setSlots(passedDetachmentUnit.detachment_unit_slots)
 		}
 
 	}, [passedDetachmentUnit])
@@ -52,7 +57,7 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 				} else {
 					slot.models.push({index, model_id: model.id})
 				}
-				handleSlotsChange([...slots])
+				setSlots([...slots])
 			} else {
 				slots.push({
 					slot_def_id: slotDef.id,
@@ -60,7 +65,7 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 					model_type: 'TacticalDrone',
 					models: [{index, model_id: model.id}],
 				})
-				handleSlotsChange([...slots])
+				setSlots([...slots])
 			}
 		}
 	}
@@ -71,6 +76,8 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 		const slot = _.find(slots, {slot_def_id: slotDef.id})
 		const row = _.find(_.get(slot, 'models'), {index})
 		// ^^ can I combine these into one lodash chain?
+		// here's slot: slot
+		// how do I get all choices per slot?
 
 		const choice = _.find(allModels, {id: _.get(row, 'model_id')})
 		return choice || null
@@ -79,17 +86,40 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 	function getSlotPoints(variation, slotDef, index) {
 		const allModels = _.get(modelsByType, [slotDef.model_type], [])
 		const slot = _.find(slots, {slot_def_id: slotDef.id})
+		if (!slot) {return}
 		const row = _.find(_.get(slot, 'models'), {index})
-		const model = _.find(allModels, {id: _.get(row, 'model_id')})
+		if (!row) {return}
 
-		return _.get(model, 'points')
+		const model = _.find(allModels, {id: _.get(row, 'model_id')})
+		if (!modelsById) {return}
+		const modelName = modelsById[row.model_id].name
+
+		// For Tau, return if this is the first, second, or third instance of this being added to a model
+		if (index === 0) {
+			return _.get(model, 'points')
+		} else {
+			let modelTypeCount = 0
+			for (const i of _.range(index, -1, -1)) {
+				const modelId = slot.models[i].model_id
+				if (modelName === modelsById[modelId].name) {
+					modelTypeCount++
+				}
+			}
+			if (modelTypeCount === 1) {
+				return _.get(model, 'points')
+			} else if (modelTypeCount === 2) {
+				return _.get(model, 'second_points') || _.get(model, 'points')
+			} else if (modelTypeCount > 2) {
+				return _.get(model, 'third_points') || _.get(model, 'second_points') || _.get(model, 'points')
+			}
+		}
 	}
 
 	function handleRemoveModel(variation, slotDef, index) {
 		return (model) => {
 			const slot = _.find(slots, {slot_def_id: slotDef.id})
 			slot.models = _.reject(slot.models, {index})
-			handleSlotsChange([...slots])
+			setSlots([...slots])
 		}
 	}
 
@@ -130,7 +160,7 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 											labelKey='name' />
 
 										<span className='slot-points'>{getSlotPoints(variation, slot, index)}</span>
-										{getSlotPoints(variation, slot, index) && (
+										{getModelChoice(variation, slot, index) && (
 											<a
 												onClick={handleRemoveModel(variation, slot, index)}
 												className='remove-slot-model'>
