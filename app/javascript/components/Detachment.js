@@ -8,6 +8,7 @@ import {useHistory, useLocation, useParams} from 'react-router-dom';
 const bindReactClass = require('lib/bind-react-class');
 const Selectimus = require('components/Selectimus');
 const {default: VariationModal} = require('components/VariationModal');
+const {slotPoints} = require('lib/slot-helper')
 
 const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss, onSubmit}) => {
 	const [detachmentDefById, setDetachmentDefById] = useState([])
@@ -140,37 +141,11 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 	}
 
 	function variationPoints(slot) {
-		const allModels = _.get(modelsByType, [slot.model_type], [])
 		if (!modelsById) {return}
 
-		let variationTotal = 0
-		for (const {index} of slot.models) {
-			const row = _.find(_.get(slot, 'models'), {index})
-			const model = _.find(allModels, {id: _.get(row, 'model_id')})
-
-			// For Tau, return if this is the first, second, or third instance of this being added to a model
-			if (index === 0) {
-				variationTotal += _.get(model, 'points')
-			} else {
-				const modelName = modelsById[row.model_id].name
-				let modelTypeCount = 0
-				for (const i of _.range(index, -1, -1)) {
-					const modelId = slot.models[i].model_id
-					if (modelName === modelsById[modelId].name) {
-						modelTypeCount++
-					}
-				}
-
-				if (modelTypeCount === 1) {
-					variationTotal += _.get(model, 'points')
-				} else if (modelTypeCount === 2) {
-					variationTotal += _.get(model, 'second_points') || _.get(model, 'points')
-				} else if (modelTypeCount > 2) {
-					variationTotal += _.get(model, 'third_points') || _.get(model, 'second_points') || _.get(model, 'points')
-				}
-			}
-		}
-		return variationTotal
+		return _(slot.models)
+			.map(({index}) => slotPoints(slot, modelsById, index))
+			.sum()
 	}
 	function totalPoints() {
 		const unitTotal = _(detachment.detachment_units)

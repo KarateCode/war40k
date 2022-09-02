@@ -5,6 +5,7 @@ const axios = require('axios');
 
 const Modal = require('components/Modal');
 const Selectimus = require('components/Selectimus');
+const {slotPoints} = require('lib/slot-helper')
 
 const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss, onSubmit}) => {
 	const [variationId, handleVariationIdChange] = useState(_.get(passedDetachmentUnit, 'variation_id') || {})
@@ -81,35 +82,8 @@ const VariationModal = ({detachmentUnit: passedDetachmentUnit, show, unit, onDis
 	}
 
 	function getSlotPoints(variation, slotDef, index) {
-		const allModels = _.get(modelsByType, [slotDef.model_type], [])
 		const slot = _.find(slots, {slot_def_id: slotDef.id})
-		if (!slot) {return}
-		const row = _.find(_.get(slot, 'models'), {index})
-		if (!row) {return}
-
-		const model = _.find(allModels, {id: _.get(row, 'model_id')})
-		if (!modelsById) {return}
-		const modelName = modelsById[row.model_id].name
-
-		// For Tau, return if this is the first, second, or third instance of this being added to a model
-		if (index === 0) {
-			return _.get(model, 'points')
-		} else {
-			let modelTypeCount = 0
-			for (const i of _.range(index, -1, -1)) {
-				const modelId = slot.models[i].model_id
-				if (modelName === modelsById[modelId].name) {
-					modelTypeCount++
-				}
-			}
-			if (modelTypeCount === 1) {
-				return _.get(model, 'points')
-			} else if (modelTypeCount === 2) {
-				return _.get(model, 'second_points') || _.get(model, 'points')
-			} else if (modelTypeCount > 2) {
-				return _.get(model, 'third_points') || _.get(model, 'second_points') || _.get(model, 'points')
-			}
-		}
+		return slotPoints(slot, modelsById, index)
 	}
 
 	function handleRemoveModel(variation, slotDef, index) {
