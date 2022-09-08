@@ -1,10 +1,10 @@
 const _ = require('lodash');
 import React from 'react'
-const {useEffect, useState} = React;
-import {useParams} from 'react-router-dom';
+const {useState} = React;
+// import {useParams} from 'react-router-dom';
 const axios = require('axios');
 
-const {handleInputChange} = require('lib/hook-helper')
+// const {handleInputChange} = require('lib/hook-helper')
 const Selectimus = require('components/Selectimus');
 const factions = [
 	{code: 'necron', label: 'Necrons'},

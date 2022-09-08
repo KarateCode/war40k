@@ -5,14 +5,14 @@ const axios = require('axios');
 
 import MatchedPlayerPane from './MatchedPlayerPane'
 
-const {handleInputChange} = require('lib/hook-helper')
-const Selectimus = require('components/Selectimus');
-const factions = [
-	{code: 'necrons', label: 'Necrons'},
-	{code: 'tau', label: 'T\'au'},
-	{code: 'space_marines', label: 'Space Marines'},
-	{code: 'chaos', label: 'Chaos'},
-]
+// const {handleInputChange} = require('lib/hook-helper')
+// const Selectimus = require('components/Selectimus');
+// const factions = [
+// 	{code: 'necrons', label: 'Necrons'},
+// 	{code: 'tau', label: 'T\'au'},
+// 	{code: 'space_marines', label: 'Space Marines'},
+// 	{code: 'chaos', label: 'Chaos'},
+// ]
 
 const MatchedPlayDetails = ({show, onSaveMatchedPlay, onDismiss}) => {
 	const {id} = useParams();
@@ -41,9 +41,6 @@ const MatchedPlayDetails = ({show, onSaveMatchedPlay, onDismiss}) => {
 	}
 
 	function handleDataChangeA(data) {
-		console.log('onDataChange');
-		console.log('data:');
-		console.log(require('util').inspect(data, false, null));
 		const newGame = Object.assign({}, game, {
 			faction_a: data.faction,
 			detachment_id_a: data.detachment_id,
@@ -54,8 +51,6 @@ const MatchedPlayDetails = ({show, onSaveMatchedPlay, onDismiss}) => {
 			detachment_ability_id_a: data.detachment_ability_id,
 			secondary_objective_id_a: data.secondary_objective_id,
 		})
-		console.log('newGame:');
-		console.log(require('util').inspect(newGame, false, null));
 		setGame(newGame)
 	}
 	function handleDataChangeB(data) {
@@ -82,8 +77,6 @@ const MatchedPlayDetails = ({show, onSaveMatchedPlay, onDismiss}) => {
 		detachment_ability_id: game.detachment_ability_id_a,
 		secondary_objective_id: game.secondary_objective_id_a,
 	}
-	console.log('paneDataA:');
-	console.log(require('util').inspect(paneDataA, false, null));
 	const paneDataB = {
 		faction: game.faction_b,
 		detachment_id: game.detachment_id_b,

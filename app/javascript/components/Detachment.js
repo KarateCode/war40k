@@ -18,7 +18,7 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 	const [unitsByRole, setUnitsByRole] = useState([])
 	const [unitsById, setUnitsById] = useState([])
 	const [modelsById, setModelsById] = useState()
-	const [modelsByType, setModelsByType] = useState(passedDetachmentUnit || {})
+	// const [modelsByType, setModelsByType] = useState(passedDetachmentUnit || {})
 	const [selectedKeywords, setSelectedKeywords] = useState([])
 	const [selectedUnit, setSelectedUnit] = useState()
 
@@ -56,8 +56,8 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 
 		const response4 = await axios.get(`/api/units/all-models.json`)
 		const models = response4.data;
-		const modelsByType = _.groupBy(models, 'type')
-		setModelsByType(modelsByType)
+		// const modelsByType = _.groupBy(models, 'type')
+		// setModelsByType(modelsByType)
 		const modelsById = _.keyBy(models, 'id')
 		setModelsById(modelsById)
 

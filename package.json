@@ -2,7 +2,8 @@
   "name": "war40k",
   "private": true,
   "scripts": {
-    "lint": "eslint --cache './**/*.js'"
+    "lint": "eslint --cache './**/*.js'",
+    "test": "npm run lint && yarn run karma start --single-run"
   },
   "dependencies": {
     "@babel/preset-react": "^7.12.10",
