@@ -16,14 +16,11 @@ const slotHelper = {
 			return _.get(model, 'points')
 		} else {
 
-			let modelTypeCount = 0
-			for (const i of _.range(index, -1, -1)) {
-				const modelId = slot.models[i].model_id
-				if (modelName === modelsById[modelId].name) {
-					modelTypeCount++
-				}
-			}
-			// once we spec this out, consider moving to lodash ^^
+			const modelTypeCount = _.range(index, -1, -1)
+				.map((i) => slot.models[i].model_id) // morph indexes to model_id's
+				.map((modelId) => modelsById[modelId].name) // morph to modelName's
+				.filter((name) => name === modelName)
+				.length
 
 			if (modelTypeCount === 1) {
 				return _.get(model, 'points')
