@@ -14,10 +14,10 @@ module.exports = {
     "parserOptions": {
         "sourceType": "module",
         "allowImportExportEverywhere": true,
-        "ecmaVersion": 2017,
+        "ecmaVersion": 2018,
         "ecmaFeatures": {
             "jsx": true,
-            "experimentalObjectRestSpread": true
+            // "experimentalObjectRestSpread": true
         },
         "experimentalObjectRestSpread": true
     },
@@ -158,7 +158,7 @@ module.exports = {
         "react/jsx-no-target-blank": 2,
         "react/jsx-no-undef": 2,
         "react/jsx-pascal-case": 2,
-        "react/jsx-space-before-closing": 2,
+        // "react/jsx-space-before-closing": 2,
         "react/jsx-tag-spacing": 2,
         "react/jsx-uses-react": 2,
         "react/jsx-uses-vars": 2,
