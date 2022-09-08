@@ -9,7 +9,7 @@
     "@rails/actioncable": "^6.0.0",
     "@rails/activestorage": "^6.0.0",
     "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "5.2.1",
+    "@rails/webpacker": "5.4.3",
     "axios": "^0.21.1",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "classnames": "^2.2.5",
@@ -32,6 +32,20 @@
   },
   "version": "0.1.0",
   "devDependencies": {
+    "browserify": "^17.0.0",
+    "chai": "^4.3.6",
+    "jasmine-core": "^4.4.0",
+    "karma": "^6.4.0",
+    "karma-browserify": "^8.1.0",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-cli": "^2.0.0",
+    "karma-jasmine": "^5.1.0",
+    "karma-mocha": "^2.0.1",
+    "karma-phantomjs-launcher": "^1.0.4",
+    "karma-webpack": "^5.0.0",
+    "mocha": "^10.0.0",
+    "phantomjs-prebuilt": "^2.1.16",
+    "watchify": "^4.0.0",
     "webpack-dev-server": "^3.11.1"
   }
 }
