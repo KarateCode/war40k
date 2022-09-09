@@ -8,8 +8,8 @@ const {handleInputChange} = require('lib/hook-helper')
 const Selectimus = require('components/Selectimus');
 
 const DetachmentEditModal = ({detachment, show, detachmentDefs, onSaveDetachment, onDismiss}) => {
-	const [name, handleNameChange] = useState(detachment.name || '');
-	const [detachment_def_id, handleDefChange] = useState(detachment.detachment_def_id || '');
+	const [name, handleNameChange] = useState(_.get(detachment, 'name', ''));
+	const [detachment_def_id, handleDefChange] = useState(_.get(detachment, 'detachment_def_id', ''));
 	const detachmentDefsById = _.keyBy(detachmentDefs, 'id')
 
 	function handleSaveArmy(event) {
@@ -23,15 +23,15 @@ const DetachmentEditModal = ({detachment, show, detachmentDefs, onSaveDetachment
 	}
 
 	useEffect(() => {
-		handleNameChange(detachment.name || '')
-		handleDefChange(detachment.detachment_def_id || '')
+		handleNameChange(_.get(detachment, 'name', ''))
+		handleDefChange(_.get(detachment, 'detachment_def_id', ''))
 	}, [detachment])
 
 	const detachmentDefIdValue = detachmentDefsById[detachment_def_id] || null
 
 	return (
 		<Modal
-			headerText={(detachment.id) ? 'Edit Detachment' : 'Add Detachment'}
+			headerText={(_.get(detachment, 'id')) ? 'Edit Detachment' : 'Add Detachment'}
 			onDismiss={onDismiss}
 			show={show}>
 
@@ -61,7 +61,7 @@ const DetachmentEditModal = ({detachment, show, detachmentDefs, onSaveDetachment
 						<a className='btn btn-cancel' onClick={onDismiss}>Cancel</a>
 					</div>
 					<div className='bottom-buttons__right'>
-						<input className='btn' type='submit' value={(detachment.id) ? 'Update Detachment' : 'Create Detachment'} />
+						<input className='btn' type='submit' value={(_.get(detachment, 'id')) ? 'Update Detachment' : 'Create Detachment'} />
 					</div>
 				</div>
 			</form>
