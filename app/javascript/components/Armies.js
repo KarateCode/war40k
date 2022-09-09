@@ -1,56 +1,33 @@
 /* globals document */
 import React from 'react'
+const {useEffect, useState} = React;
 const axios = require('axios');
 
 const bindReactClass = require('lib/bind-react-class');
 
 const {default: ArmyEditModal} = require('components/ArmyEditModal');
 
-class Armies extends React.Component {
-	constructor(props) {
-		super(props)
-		this.state = {
-			armies: [],
-			showAddArmyModal: false,
-			newArmy: {
-				name: '',
-				'point_battle': null,
-				'command_points': 0,
-			},
-			editArmy: {},
-		}
-	}
+const Armies = () => {
+	const [armies, setArmies] = useState([])
+	const [showAddArmyModal, setShowAddArmyModal] = useState()
+	const [editArmy, setEditArmy] = useState({})
 
-	async componentDidMount() {
+	useEffect(async () => {
 		const response = await axios.get(`/api/armies.json`)
 		const armies = response.data
-		this.setState({armies})
+		setArmies(armies)
+	})
+
+	function handleShowAddArmyModal() {
+		setShowAddArmyModal(true)
+		setEditArmy({})
 	}
 
-	handleShowAddArmyModal() {
-		this.setState({showAddArmyModal: true, editArmy: {}})
+	function handleToggleAddArmyModal() {
+		setShowAddArmyModal(!showAddArmyModal)
 	}
 
-	handleToggleAddArmyModal() {
-		this.setState({showAddArmyModal: !this.state.showAddArmyModal})
-	}
-
-	handleNameChange(event) {
-		const newArmy = Object.assign({}, this.state.newArmy, {name: event.target.value})
-		this.setState({newArmy})
-	}
-
-	handleCommandPointChange(event) {
-		const newArmy = Object.assign({}, this.state.newArmy, {'command_points': parseInt(event.target.value)})
-		this.setState({newArmy})
-	}
-
-	handlePointBattleChange(event) {
-		const newArmy = Object.assign({}, this.state.newArmy, {'point_battle': parseInt(event.target.value)})
-		this.setState({newArmy})
-	}
-
-	async handleSaveArmy(army) {
+	async function handleSaveArmy(army) {
 		const token = document.querySelector('meta[name="csrf-token"]').content
 		const headers = {headers: {'X-CSRF-Token': token}}
 		if (army.id) {
@@ -61,66 +38,64 @@ class Armies extends React.Component {
 
 		const response = await axios.get(`/api/armies.json`)
 		const armies = response.data
-		this.setState({armies, showAddArmyModal: false})
+		setArmies(armies)
+		setShowAddArmyModal(false)
 	}
 
-	handleEditArmy(editArmy) {
+	function handleEditArmy(editArmy) {
 		return () => {
-			this.setState({showAddArmyModal: true, editArmy})
+			setShowAddArmyModal(true)
+			setEditArmy(editArmy)
 		}
 	}
 
-	handleDeleteArmy(army) {
+	function handleDeleteArmy(army) {
 	}
 
-	render () {
-		const {armies, editArmy, showAddArmyModal} = this.state
+	return (
+		<div className='Armies'>
+			<header>
+				<span className='left'><a className='btn btn-cancel left' href='/'>Home</a></span>
+				<span className='middle'>Armies</span>
+				<span className='right'><span className='placeholder'> </span></span>
+			</header>
 
-		return (
-			<div className='Armies'>
-				<header>
-					<span className='left'><a className='btn btn-cancel left' href='/'>Home</a></span>
-					<span className='middle'>Armies</span>
-					<span className='right'><span className='placeholder'> </span></span>
-				</header>
-
-				<div className='main-body'>
-					<table className='table has-clickable-rows'>
-						<thead>
-							<tr>
-								<th> </th>
-								<th> </th>
-								<th>Name</th>
-								<th>Point Battle</th>
-								<th>Command Points</th>
+			<div className='main-body'>
+				<table className='table has-clickable-rows'>
+					<thead>
+						<tr>
+							<th> </th>
+							<th> </th>
+							<th>Name</th>
+							<th>Point Battle</th>
+							<th>Command Points</th>
+						</tr>
+					</thead>
+					<tbody>
+						{armies.map((army) => (
+							<tr key={`army-${army.id}`}>
+								<td className='icon-field edit'><a onClick={handleEditArmy(army)}>✎</a></td>
+								<td className='icon-field delete'><a onClick={handleDeleteArmy(army)}>✗</a></td>
+								<td className='link-field'><a href={`/armies/${army.id}`}>{army.name}</a></td>
+								<td className='link-field'><a href={`/armies/${army.id}`}>{army.point_battle}</a></td>
+								<td className='link-field'><a href={`/armies/${army.id}`}>{army.command_points}</a></td>
 							</tr>
-						</thead>
-						<tbody>
-							{armies.map((army) => (
-								<tr key={`army-${army.id}`}>
-									<td className='icon-field edit'><a onClick={this.handleEditArmy(army)}>✎</a></td>
-									<td className='icon-field delete'><a onClick={this.handleDeleteArmy(army)}>✗</a></td>
-									<td className='link-field'><a href={`/armies/${army.id}`}>{army.name}</a></td>
-									<td className='link-field'><a href={`/armies/${army.id}`}>{army.point_battle}</a></td>
-									<td className='link-field'><a href={`/armies/${army.id}`}>{army.command_points}</a></td>
-								</tr>
-							))}
-						</tbody>
-					</table>
+						))}
+					</tbody>
+				</table>
 
-					<a className='btn' onClick={this.handleShowAddArmyModal}>
-						Add Army
-					</a>
-				</div>
-
-				<ArmyEditModal
-					show={showAddArmyModal}
-					onDismiss={this.handleToggleAddArmyModal}
-					army={editArmy}
-					onSaveArmy={this.handleSaveArmy} />
+				<a className='btn' onClick={handleShowAddArmyModal}>
+					Add Army
+				</a>
 			</div>
-		);
-	}
+
+			<ArmyEditModal
+				show={showAddArmyModal}
+				onDismiss={handleToggleAddArmyModal}
+				army={editArmy}
+				onSaveArmy={handleSaveArmy} />
+		</div>
+	)
 }
 
 export default bindReactClass(Armies)

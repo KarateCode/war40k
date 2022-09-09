@@ -8,7 +8,7 @@ const axios = require('axios');
 const bindReactClass = require('lib/bind-react-class');
 const {default: DetachmentEditModal} = require('components/DetachmentEditModal');
 
-const Army = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss, onSubmit}) => {
+const Army = () => {
 	const [army, setArmy] = useState()
 	const [detachmentDefs, setDetachmentDefs] = useState()
 	const [detachmentDefById, setDetachmentDefById] = useState()
