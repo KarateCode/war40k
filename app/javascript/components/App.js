@@ -11,6 +11,8 @@ import Army from './Army'
 import Detachment from './Detachment'
 import Home from './Home'
 
+const {default: PromptRoot} = require('components/PromptRoot');
+
 class App extends React.Component {
 	render () {
 		return (
@@ -27,6 +29,8 @@ class App extends React.Component {
 					<Route path='/armies' component={Armies} />
 					<Route path='/detachments/:id' component={Detachment} />
 				</Switch>
+
+				<PromptRoot />
 			</BrowserRouter>
 		);
 	}
