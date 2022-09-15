@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 		put '/armies/:id', to: 'armies#update'
 		get '/armies/:id/detachments', to: 'armies#detachments'
 		get '/armies/:id', to: 'armies#show'
+		delete '/armies/:id', to: 'armies#destroy'
 		get '/detachment_defs', to: 'detachment_defs#index'
 
 		get '/detachments/:id', to: 'detachments#show'

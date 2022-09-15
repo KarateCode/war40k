@@ -1,11 +1,14 @@
 /* globals document */
+
+const _ = require('lodash');
 import React from 'react'
-const {useEffect, useState} = React;
-const axios = require('axios');
+const {useEffect, useState} = React
+const axios = require('axios')
 
-const bindReactClass = require('lib/bind-react-class');
+const bindReactClass = require('lib/bind-react-class')
 
-const {default: ArmyEditModal} = require('components/ArmyEditModal');
+const {default: Prompt} = require('components/Prompt')
+const {default: ArmyEditModal} = require('components/ArmyEditModal')
 
 const Armies = () => {
 	const [armies, setArmies] = useState([])
@@ -16,15 +19,15 @@ const Armies = () => {
 		const response = await axios.get(`/api/armies.json`)
 		const armies = response.data
 		setArmies(armies)
-	})
+	}, [])
 
 	function handleShowAddArmyModal() {
 		setShowAddArmyModal(true)
 		setEditArmy({})
 	}
 
-	function handleToggleAddArmyModal() {
-		setShowAddArmyModal(!showAddArmyModal)
+	function handleDismissAddArmyModal() {
+		setShowAddArmyModal(false)
 	}
 
 	async function handleSaveArmy(army) {
@@ -50,6 +53,19 @@ const Armies = () => {
 	}
 
 	function handleDeleteArmy(army) {
+		return async () => {
+			const confirmed = await Prompt.open({
+				question: 'Are you sure you would like to delete this Army?',
+			})
+
+			if (confirmed) {
+				const token = document.querySelector('meta[name="csrf-token"]').content
+				const headers = {headers: {'X-CSRF-Token': token}}
+				await axios.delete(`/api/armies/${army.id}.json`, headers)
+				const newArmies = _.reject(armies, {id: army.id})
+				setArmies(newArmies)
+			}
+		}
 	}
 
 	return (
@@ -91,7 +107,7 @@ const Armies = () => {
 
 			<ArmyEditModal
 				show={showAddArmyModal}
-				onDismiss={handleToggleAddArmyModal}
+				onDismiss={handleDismissAddArmyModal}
 				army={editArmy}
 				onSaveArmy={handleSaveArmy} />
 		</div>

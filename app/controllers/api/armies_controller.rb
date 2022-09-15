@@ -25,6 +25,11 @@ class Api::ArmiesController < ApplicationController
         render json: detachments.to_json
     end
 
+    def destroy
+        army = Army.find params[:id]
+        army.destroy
+    end
+
     private
     def army_params
         params.require(:army).permit(:id, :name, :point_battle, :command_points)
