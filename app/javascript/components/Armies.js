@@ -68,6 +68,13 @@ const Armies = () => {
 		}
 	}
 
+	function pointsTotal(army) {
+		return _(army.detachments)
+			.map('points')
+			.compact()
+			.sum()
+	}
+
 	return (
 		<div className='Armies'>
 			<header>
@@ -84,7 +91,8 @@ const Armies = () => {
 							<th> </th>
 							<th>Name</th>
 							<th>Point Battle</th>
-							<th>Command Points</th>
+							<th>Command</th>
+							<th>Points Total</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -95,6 +103,7 @@ const Armies = () => {
 								<td className='link-field'><a href={`/armies/${army.id}`}>{army.name}</a></td>
 								<td className='link-field'><a href={`/armies/${army.id}`}>{army.point_battle}</a></td>
 								<td className='link-field'><a href={`/armies/${army.id}`}>{army.command_points}</a></td>
+								<td className='link-field'><a href={`/armies/${army.id}`}>{pointsTotal(army)}</a></td>
 							</tr>
 						))}
 					</tbody>
