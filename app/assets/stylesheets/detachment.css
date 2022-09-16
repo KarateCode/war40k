@@ -82,6 +82,17 @@
 .Detachment .units .detachment-unit .unit-image {
     /*width: 100%;*/
 }
+.Detachment .units .unit-points {
+    display: flex;
+}
+.Detachment .units .unit-points .unit-total-points {
+    color: blue;
+    flex-grow: 1;
+}
+.Detachment .units .unit-points .base-points {
+    flex-grow: 1;
+}
+
 .Detachment .units .detachment-unit.selected {
     border: 2px solid green;
     color: green;

@@ -26,6 +26,8 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 	const {search, pathname} = useLocation()
 	const history = useHistory()
 
+	const dunitsByUnitId = _.keyBy(detachment.detachment_units, 'unit_id')
+
 	useEffect(async () => {
 		const response = await axios.get(`/api/detachment_defs.json`)
 		const detachmentDefs = response.data
@@ -140,6 +142,15 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 		}
 	}
 
+	function unitPoints(unit) {
+		const dunit = dunitsByUnitId[unit.id]
+		if (!dunit) {return}
+
+		return _(dunit.detachment_unit_slots)
+			.map((slot) => variationPoints(slot))
+			.compact()
+			.sum() + unit.points
+	}
 	function variationPoints(slot) {
 		if (!modelsById) {return}
 
@@ -156,7 +167,7 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 			.filter('detachment_unit_slots.length')
 			.map('detachment_unit_slots')
 			.flatten()
-			.map((variation) => variationPoints(variation))
+			.map((slot) => variationPoints(slot))
 			.compact()
 			.sum()
 
@@ -168,30 +179,38 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 		const units = _.get(unitsByRole, type, [])
 
 		return (
-			units.map((unit) => (
-				<React.Fragment key={`unit-${unit.id}`}>
-					<div
-						className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
-						>
-						{unit.name}
-						<div onClick={handleUnitClick(unit)}><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
-						<div onClick={handleUnitClick(unit)}>{unit.points} V</div>
-						<div>
-							<a href={unit.datasheet_link} target='_blank' rel='noreferrer' className='datasheet-link'>
-								Datasheet
-							</a>
+			units.map((unit) => {
+				const unitTotalPoints = unitPoints(unit)
+				return (
+					<React.Fragment key={`unit-${unit.id}`}>
+						<div
+							className={`detachment-unit ${_.includes(selectedUnitIds, unit.id) ? 'selected' : 'fail'}`}
+							>
+							{unit.name}
+							<div onClick={handleUnitClick(unit)}><img src={`../assets/${unit.picture}`} className='unit-image' /></div>
+							<div onClick={handleUnitClick(unit)} className='unit-points'>
+								{(unitTotalPoints > unit.points) && (
+									<span className='unit-total-points'>{unitTotalPoints}</span>
+								)}
+								<span className='base-points'>{unit.points}</span>
+							</div>
+							<div>
+								<a href={unit.datasheet_link} target='_blank' rel='noreferrer' className='datasheet-link'>
+									Datasheet
+								</a>
+							</div>
 						</div>
-					</div>
-					{_.includes(selectedUnitIds, unit.id) && (
-						<div>
-							<a className='edit-variation' title='Edit Variation'
-								onClick={handleEditVariations(unit)}>
-								Edit
-							</a>
-						</div>
-					)}
-				</React.Fragment>
-			))
+						{_.includes(selectedUnitIds, unit.id) && (
+							<div>
+								<a className='edit-variation' title='Edit Variation'
+									onClick={handleEditVariations(unit)}>
+									Edit
+								</a>
+							</div>
+						)}
+					</React.Fragment>
+				)
+			})
 		)
 	}
 
