@@ -18,7 +18,6 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 	const [unitsByRole, setUnitsByRole] = useState([])
 	const [unitsById, setUnitsById] = useState([])
 	const [modelsById, setModelsById] = useState()
-	// const [modelsByType, setModelsByType] = useState(passedDetachmentUnit || {})
 	const [selectedKeywords, setSelectedKeywords] = useState([])
 	const [selectedUnit, setSelectedUnit] = useState()
 
@@ -58,15 +57,18 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 
 		const response4 = await axios.get(`/api/units/all-models.json`)
 		const models = response4.data;
-		// const modelsByType = _.groupBy(models, 'type')
-		// setModelsByType(modelsByType)
 		const modelsById = _.keyBy(models, 'id')
 		setModelsById(modelsById)
 
 		const params = new URLSearchParams(search);
 		const keys = _.compact((params.get('keywords') || '').split(','));
 		const selectedKeywords = _.map(keys, (keyword) => ({key: keyword, value: keyword}))
-		if (selectedKeywords.length > 0) {
+		const recordedFilters = detachment.filters
+			.split(',')
+			.map((filter) => ({key: filter, value: filter}));
+		if (recordedFilters.length > 0 && selectedKeywords.length === 0) {
+			keywordChange(recordedFilters, units)
+		} else if (selectedKeywords.length > 0) {
 			keywordChange(selectedKeywords, units)
 		}
 	}, [])
@@ -74,7 +76,7 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 	function handleKeywordChange(selectedKeywords) {
 		keywordChange(selectedKeywords, units)
 	}
-	function keywordChange(selectedKeywords, passedUnits) {
+	async function keywordChange(selectedKeywords, passedUnits) {
 		const keywords = _.map(selectedKeywords, 'key')
 		history.push({
 			pathname,
@@ -93,6 +95,12 @@ const Detachment = ({detachmentUnit: passedDetachmentUnit, show, unit, onDismiss
 
 		setUnitsByRole(unitsByRole)
 		setSelectedKeywords(selectedKeywords)
+
+		// Save filter selection to database
+		detachment.filters = keywords.join(',')
+		const token = document.querySelector('meta[name="csrf-token"]').content
+		const headers = {headers: {'X-CSRF-Token': token}}
+		await axios.put(`/api/detachments/${id}.json`, detachment, headers)
 	}
 
 	function handleUnitClick(unit) {
