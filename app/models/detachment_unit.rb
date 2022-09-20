@@ -1,5 +1,5 @@
 class DetachmentUnit < ApplicationRecord
-    has_many :detachment_unit_slots
+    has_many :detachment_unit_slots, dependent: :destroy
     accepts_nested_attributes_for :detachment_unit_slots
 
     def as_json(options = {})

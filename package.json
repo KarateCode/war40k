@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "lint": "eslint --cache './**/*.js'",
-    "test": "npm run lint && yarn run karma start --single-run"
+    "test": "npm run lint && yarn run karma start --single-run && rspec"
   },
   "dependencies": {
     "@babel/preset-react": "^7.12.10",

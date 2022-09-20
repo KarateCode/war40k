@@ -1,5 +1,6 @@
 class Detachment < ApplicationRecord
-    has_many :detachment_units
+    belongs_to :army
+    has_many :detachment_units, dependent: :destroy
 
     def as_json(options = {})
         if self.detachment_units
